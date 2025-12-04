@@ -1,13 +1,13 @@
 package Productos;
 
 public class Producto {
-    int idProducto;
-    String codigo;
-    String nombre;
-    String categoria;
-    double precio;
-    int stock;
-    int idProveedro;
+    private int idProducto;
+    private String codigo;
+    private String nombre;
+    private String categoria;
+    private double precio;
+    private int stock;
+    private int idProveedor;
 
     public int getIdProducto() {
         return idProducto;
@@ -33,8 +33,8 @@ public class Producto {
         return stock;
     }
 
-    public int getIdProveedro() {
-        return idProveedro;
+    public int getIdProveedor() {
+        return idProveedor;
     }
 
     public void setIdProducto(int idProducto) {
@@ -61,30 +61,30 @@ public class Producto {
         this.stock = stock;
     }
 
-    public void setIdProveedro(int idProveedro) {
-        this.idProveedro = idProveedro;
+    public void setIdProveedor(int idProveedor) {
+        this.idProveedor = idProveedor;
     }
 
     public Producto() {
     }
 
-    public Producto(String codigo, String nombre, String categoria, double precio, int stock, int idProveedro) {
+    public Producto(String codigo, String nombre, String categoria, double precio, int stock, int idProveedor) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.categoria = categoria;
         this.precio = precio;
         this.stock = stock;
-        this.idProveedro = idProveedro;
+        this.idProveedor = idProveedor;
     }
 
-    public Producto(int idProducto, String codigo, String nombre, String categoria, double precio, int stock, int idProveedro) {
+    public Producto(int idProducto, String codigo, String nombre, String categoria, double precio, int stock, int idProveedor) {
         this.idProducto = idProducto;
         this.codigo = codigo;
         this.nombre = nombre;
         this.categoria = categoria;
         this.precio = precio;
         this.stock = stock;
-        this.idProveedro = idProveedro;
+        this.idProveedor = idProveedor;
     }
 
     @Override
@@ -100,10 +100,12 @@ public class Producto {
     }
 
     public boolean isAgotado() {
-        if (stock == 0) return false;
+        if (stock == 0) return true;
+        else return false;
     }
 
     public boolean isStockBajo(int umbral) {
         if (stock <= umbral) return true;
+        else return false;
     }
 }
