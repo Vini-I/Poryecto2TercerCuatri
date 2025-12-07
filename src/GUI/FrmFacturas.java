@@ -46,7 +46,7 @@ public class FrmFacturas extends javax.swing.JFrame {
         table = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         btnNew = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
+        lblGestion1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1200, 800));
@@ -158,8 +158,8 @@ public class FrmFacturas extends javax.swing.JFrame {
 
         lblGestion.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblGestion.setForeground(new java.awt.Color(30, 41, 57));
-        lblGestion.setText("Gestion de Facturas");
-        jPanel4.add(lblGestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
+        lblGestion.setText("Generar");
+        jPanel4.add(lblGestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 20, -1, -1));
 
         txtFilter.setBackground(new java.awt.Color(255, 255, 255));
         txtFilter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -171,9 +171,9 @@ public class FrmFacturas extends javax.swing.JFrame {
         btnDelete.setBackground(new java.awt.Color(231, 0, 11));
         btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnDelete.setText("Eliminar");
+        btnDelete.setText("PDF");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
+        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 50, 120, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
         jTable1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -196,16 +196,14 @@ public class FrmFacturas extends javax.swing.JFrame {
         btnNew.setBackground(new java.awt.Color(0, 166, 62));
         btnNew.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
-        btnNew.setText("Nuevo");
+        btnNew.setText("XML");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
+        jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 50, 120, 40));
 
-        btnEdit.setBackground(new java.awt.Color(21, 93, 252));
-        btnEdit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnEdit.setForeground(new java.awt.Color(255, 255, 255));
-        btnEdit.setText("Editar");
-        btnEdit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
+        lblGestion1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblGestion1.setForeground(new java.awt.Color(30, 41, 57));
+        lblGestion1.setText("Gestion de Facturas");
+        jPanel4.add(lblGestion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 980, 780));
 
@@ -268,7 +266,6 @@ public class FrmFacturas extends javax.swing.JFrame {
     private javax.swing.JButton btnActual;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnProductos;
@@ -284,6 +281,7 @@ public class FrmFacturas extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblGestion;
+    private javax.swing.JLabel lblGestion1;
     private javax.swing.JScrollPane table;
     private javax.swing.JTextField txtFilter;
     // End of variables declaration//GEN-END:variables
