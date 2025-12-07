@@ -1,6 +1,6 @@
 package modelo.daos;
 
-import db.ConexionDB;
+import bd.ConexionBD;
 import modelo.Proveedor;
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.List;
 public class ProveedorDAO implements IProveedorDAO {
 
     private Connection getConnection() throws SQLException {
-        return ConexionDB.getInstance().getConnection();
+        return ConexionBD.getInstance().getConnection();
     }
 
     @Override
