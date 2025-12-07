@@ -1,6 +1,6 @@
-package Clientes;
+package modelo;
 
-public class ClienteDTO {
+public class Cliente {
     private String cedula;
     private String nombreCompleto;
     private String direccion;
@@ -47,14 +47,25 @@ public class ClienteDTO {
         this.email = email;
     }
 
-    public ClienteDTO() {
+    public Cliente() {
     }
 
-    public ClienteDTO(String cedula, String nombreCompleto, String direccion, String telefono, String email) {
+    public Cliente(String cedula, String nombreCompleto, String direccion, String telefono, String email) {
         this.cedula = cedula;
         this.nombreCompleto = nombreCompleto;
         this.direccion = direccion;
         this.telefono = telefono;
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "cedula='" + cedula + '\'' +
+                ", nombreCompleto='" + nombreCompleto + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
