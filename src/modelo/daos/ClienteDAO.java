@@ -1,5 +1,6 @@
 package modelo.daos;
 
+import bd.ConexionBD;
 import modelo.Cliente;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.List;
 public class ClienteDAO implements IClienteDAO {
 
     private Connection getConnection() throws SQLException {
-        return MiConexionBD.getInstance().getConnection();
+        return ConexionBD.getInstance().getConnection();
     }
 
     @Override
