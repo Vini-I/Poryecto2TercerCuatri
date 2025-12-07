@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProveedorDAO implements IProveedorDao {
+public class ProveedorDAO implements IProveedorDAO {
 
     private Connection getConnection() throws SQLException {
         return MiConexionBD.getInstance().getConnection();
@@ -29,7 +29,7 @@ public class ProveedorDAO implements IProveedorDao {
             if (filas > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
-                        proveedor.setId(rs.getInt(1));
+                        proveedor.setIdProveedor(rs.getInt(1));
                     }
                 }
             }
@@ -76,7 +76,7 @@ public class ProveedorDAO implements IProveedorDao {
             ps.setString(1, proveedor.getNombre());
             ps.setString(2, proveedor.getContacto());
             ps.setString(3, proveedor.getDireccion());
-            ps.setInt(4, proveedor.getId());
+            ps.setInt(4, proveedor.getIdProveedor());
 
             return ps.executeUpdate() > 0;
 
@@ -150,7 +150,7 @@ public class ProveedorDAO implements IProveedorDao {
 
     private Proveedor mapearProveedor(ResultSet rs) throws SQLException {
         Proveedor p = new Proveedor();
-        p.setId(rs.getInt("id"));
+        p.setIdProveedor(rs.getInt("id"));
         p.setNombre(rs.getString("nombre"));
         // contacto / direccion son VARBINARY en BD
         // los tratamos como String para el codigo
