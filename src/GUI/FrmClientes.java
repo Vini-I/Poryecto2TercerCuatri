@@ -8,12 +8,12 @@ package GUI;
  *
  * @author llean
  */
-public class FrmProductos extends javax.swing.JFrame {
+public class FrmClientes extends javax.swing.JFrame {
 
     /**
-     * Creates new form FrmProductos
+     * Creates new form FrmClientes
      */
-    public FrmProductos() {
+    public FrmClientes() {
         initComponents();
     }
 
@@ -33,8 +33,8 @@ public class FrmProductos extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         btnLogout = new javax.swing.JButton();
         btnActual = new javax.swing.JButton();
+        btnProductos = new javax.swing.JButton();
         btnProveedores = new javax.swing.JButton();
-        btnClientes = new javax.swing.JButton();
         btnVentas = new javax.swing.JButton();
         btnUsuarios = new javax.swing.JButton();
         btnFacturas = new javax.swing.JButton();
@@ -42,15 +42,15 @@ public class FrmProductos extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         lblGestion = new javax.swing.JLabel();
         txtFilter = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
         table = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        btnDelete = new javax.swing.JButton();
         btnNew = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1200, 800));
-        setMinimumSize(new java.awt.Dimension(1200, 800));
+        setPreferredSize(new java.awt.Dimension(1200, 800));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
@@ -84,13 +84,24 @@ public class FrmProductos extends javax.swing.JFrame {
         btnActual.setBackground(new java.awt.Color(21, 93, 252));
         btnActual.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnActual.setForeground(new java.awt.Color(255, 255, 255));
-        btnActual.setText("Productos");
+        btnActual.setText("Clientes");
         btnActual.setAlignmentX(0.5F);
         btnActual.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 255)));
         btnActual.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnActual.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnActual.setIconTextGap(5);
-        jPanel2.add(btnActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 180, 40));
+        jPanel2.add(btnActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 180, 40));
+
+        btnProductos.setBackground(new java.awt.Color(54, 65, 83));
+        btnProductos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnProductos.setForeground(new java.awt.Color(255, 255, 255));
+        btnProductos.setText("Productos");
+        btnProductos.setAlignmentX(0.5F);
+        btnProductos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(74, 85, 101)));
+        btnProductos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnProductos.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnProductos.setIconTextGap(5);
+        jPanel2.add(btnProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 180, 40));
 
         btnProveedores.setBackground(new java.awt.Color(54, 65, 83));
         btnProveedores.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -102,17 +113,6 @@ public class FrmProductos extends javax.swing.JFrame {
         btnProveedores.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnProveedores.setIconTextGap(5);
         jPanel2.add(btnProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 180, 40));
-
-        btnClientes.setBackground(new java.awt.Color(54, 65, 83));
-        btnClientes.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnClientes.setForeground(new java.awt.Color(255, 255, 255));
-        btnClientes.setText("Clientes");
-        btnClientes.setAlignmentX(0.5F);
-        btnClientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(74, 85, 101)));
-        btnClientes.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnClientes.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        btnClientes.setIconTextGap(5);
-        jPanel2.add(btnClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 180, 40));
 
         btnVentas.setBackground(new java.awt.Color(54, 65, 83));
         btnVentas.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -158,7 +158,7 @@ public class FrmProductos extends javax.swing.JFrame {
 
         lblGestion.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblGestion.setForeground(new java.awt.Color(30, 41, 57));
-        lblGestion.setText("Gestion de Productos");
+        lblGestion.setText("Gestion de Clientes");
         jPanel4.add(lblGestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
 
         txtFilter.setBackground(new java.awt.Color(255, 255, 255));
@@ -172,6 +172,13 @@ public class FrmProductos extends javax.swing.JFrame {
             }
         });
         jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
+
+        btnDelete.setBackground(new java.awt.Color(231, 0, 11));
+        btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelete.setText("Eliminar");
+        btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
         jTable1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -191,13 +198,6 @@ public class FrmProductos extends javax.swing.JFrame {
 
         jPanel4.add(table, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 940, 660));
 
-        btnDelete.setBackground(new java.awt.Color(231, 0, 11));
-        btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnDelete.setText("Eliminar");
-        btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
-
         btnNew.setBackground(new java.awt.Color(0, 166, 62));
         btnNew.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
@@ -214,7 +214,7 @@ public class FrmProductos extends javax.swing.JFrame {
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 980, 780));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 800));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -240,32 +240,32 @@ public class FrmProductos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmProductos().setVisible(true);
+                new FrmClientes().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActual;
-    private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnFacturas;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnProveedores;
     private javax.swing.JButton btnUsuarios;
     private javax.swing.JButton btnVentas;
