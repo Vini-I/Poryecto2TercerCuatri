@@ -15,7 +15,7 @@ public class Usuario {
     private Integer id;
     private String username;
     private String password;
-    private String nombreCompleto;
+    private String nombre;
     private RolEnum rol;
     private LocalDateTime fechaCreacion;
     private LocalDateTime ultimoAcceso;
@@ -28,7 +28,7 @@ public class Usuario {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.nombreCompleto = nombreCompleto;
+        this.nombre = nombreCompleto;
         this.rol = rol;
         this.fechaCreacion = fechaCreacion;
         this.ultimoAcceso = ultimoAcceso;
@@ -40,8 +40,8 @@ public class Usuario {
     public void setUsername(String username) {this.username = username;}
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
-    public String getNombreCompleto() {return nombreCompleto;}
-    public void setNombreCompleto(String nombreCompleto) {this.nombreCompleto = nombreCompleto;}
+    public String getNombre() {return nombre;}
+    public void setNombreCompleto(String nombreCompleto) {this.nombre = nombreCompleto;}
     public RolEnum getRol() {return rol;}
     public void setRol(RolEnum rol) {this.rol = rol;}
     public LocalDateTime getFechaCreacion() {return fechaCreacion;}
@@ -96,7 +96,7 @@ public class Usuario {
         return "Usuario{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", nombreCompleto='" + nombreCompleto + '\'' +
+                ", nombreCompleto='" + nombre + '\'' +
                 ", rol=" + rol +
                 ", ultimoAcceso=" + ultimoAcceso +
                 '}';

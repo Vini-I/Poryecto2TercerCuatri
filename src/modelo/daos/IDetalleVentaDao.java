@@ -11,11 +11,9 @@ import modelo.dtos.DetalleVentaDTO;
  *
  * @author rodol
  */
-public interface IDetalleVentaDao extends IDao {
+public interface IDetalleVentaDao extends IDao<DetalleVentaDTO> {
 
     List<DetalleVentaDTO> listarPorVenta(int ventaId);
 
     List<DetalleVentaDTO> listarPorProducto(int productoId);
-
-    boolean eliminarPorVenta(int ventaId);
 }
