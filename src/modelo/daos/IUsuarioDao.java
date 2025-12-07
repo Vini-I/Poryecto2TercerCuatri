@@ -11,11 +11,13 @@ import modelo.dtos.UsuarioDTO;
  *
  * @author rodol
  */
-public interface IUsuarioDao extends IDao {
+public interface IUsuarioDao extends IDao<UsuarioDTO> {
 
     UsuarioDTO buscarPorUsername(String username);
 
     List<UsuarioDTO> listarPorRol(String rol);
 
     boolean existeUsername(String username);
+    
+    boolean actualizarUltimoAcceso(int id);
 }

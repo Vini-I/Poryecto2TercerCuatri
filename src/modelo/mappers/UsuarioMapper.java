@@ -39,7 +39,7 @@ public class UsuarioMapper {
                 entity.getId(),
                 entity.getUsername(),
                 entity.getPassword(),
-                entity.getNombreCompleto(),
+                entity.getNombre(),
                 entity.getRol() != null ? entity.getRol().name() : null,
                 entity.getFechaCreacion(),
                 entity.getUltimoAcceso()

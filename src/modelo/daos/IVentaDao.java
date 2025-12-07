@@ -11,7 +11,7 @@ import modelo.dtos.VentaDTO;
  *
  * @author rodol
  */
-public interface IVentaDao extends IDao {
+public interface IVentaDao extends IDao<VentaDTO> {
 
     int insertarObtenerId(VentaDTO venta);
 

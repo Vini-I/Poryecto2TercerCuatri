@@ -13,21 +13,21 @@ import java.time.LocalDateTime;
 public class VentaDTO {
 
     private Integer id;
-    private String clienteId;
+    private Integer clienteId;
     private LocalDateTime fecha;
     private String estado;
 
     public VentaDTO() {
     }
 
-    public VentaDTO(Integer id, String clienteId, LocalDateTime fecha, String estado) {
+    public VentaDTO(Integer id, Integer clienteId, LocalDateTime fecha, String estado) {
         this.id = id;
         this.clienteId = clienteId;
         this.fecha = fecha;
         this.estado = estado;
     }
 
-    public VentaDTO(String clienteId, LocalDateTime fecha, String estado) {
+    public VentaDTO(Integer clienteId, LocalDateTime fecha, String estado) {
         this.clienteId = clienteId;
         this.fecha = fecha;
         this.estado = estado;
@@ -35,8 +35,8 @@ public class VentaDTO {
 
     public Integer getId() {return id;}
     public void setId(Integer id) {this.id = id;}
-    public String getClienteId() {return clienteId;}
-    public void setClienteId(String clienteId) {this.clienteId = clienteId;}
+    public Integer getClienteId() {return clienteId;}
+    public void setClienteId(Integer clienteId) {this.clienteId = clienteId;}
     public LocalDateTime getFecha() {return fecha;}
     public void setFecha(LocalDateTime fecha) {this.fecha = fecha;}
     public String getEstado() {return estado;}

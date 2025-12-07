@@ -35,7 +35,7 @@ public class DetalleVentaMapper {
         
         return new VentaDTO(
             entity.getId(),
-            entity.getCliente() != null ? entity.getCliente().getCedula() : null, 
+            entity.getCliente() != null ? entity.getCliente().getId() : null, 
             entity.getFecha(),
             entity.getEstado() != null ? entity.getEstado().name() : null
         );
