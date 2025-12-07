@@ -11,9 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java. sql.SQLException;
 import java. sql.Timestamp;
+import java.time.LocalDateTime;
 import java. util.ArrayList;
 import java.util.List;
+import modelo.dtos.DetalleVentaFacturaDTO;
 import modelo.dtos.VentaDTO;
+import modelo.dtos.VentaFacturaDTO;
 
 /**
  *
@@ -232,5 +235,85 @@ public class VentaDAO implements IVentaDao {
 
         return dto;
     }
+    
+     public VentaFacturaDTO obtenerParaFactura(int idVenta) throws SQLException {
+         String sqlVenta = """
+             SELECT 
+                    v.id AS ventaId,
+                    v. fecha,
+                    v.estado,
+                    c.nombre AS clienteNombre,
+                    c.cedula AS clienteCedula,
+                    c.direccion AS clienteDireccion,
+                    c.telefono AS clienteTelefono,
+                    c.correo AS clienteEmail
+                FROM ventas v
+                INNER JOIN clientes c ON v. cliente_id = c.cedula
+                WHERE v.id = ?   
+            """;
+
+         String sqlDetalles = """
+        SELECT 
+            dv.id,
+            dv.cantidad,
+            dv.precio_unitario AS precioUnitario,
+            p.id AS productoId,
+            p.codigo AS productoCodigo,
+            p.nombre AS productoNombre
+        FROM detalle_venta dv
+        INNER JOIN productos p ON dv.producto_id = p.id
+        WHERE dv.venta_id = ?
+    """;
+        
+        VentaFacturaDTO ventaFactura = null;
+        
+        try (Connection conn = ConexionBD.getInstance().getConnection()) {
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlVenta)) {
+                ps.setInt(1, idVenta);
+                ResultSet rs = ps.executeQuery();
+                
+                if (rs.next()) {
+                    ventaFactura = new VentaFacturaDTO();
+                    ventaFactura.setVentaId(rs.getInt("ventaId"));
+                    ventaFactura.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
+                    ventaFactura.setEstado(rs.getString("estado"));
+
+                    ventaFactura.setClienteNombre(rs.getString("clienteNombre"));
+                    ventaFactura.setClienteCedula(rs.getString("clienteCedula"));
+                    ventaFactura.setClienteDireccion(rs.getString("clienteDireccion"));
+                    ventaFactura.setClienteTelefono(rs.getString("clienteTelefono"));
+                    ventaFactura.setClienteEmail(rs.getString("clienteEmail"));
+                }
+            }
+
+            if (ventaFactura != null) {
+                List<DetalleVentaFacturaDTO> detalles = new ArrayList<>();
+                
+                try (PreparedStatement ps = conn.prepareStatement(sqlDetalles)) {
+                    ps.setInt(1, idVenta);
+                    ResultSet rs = ps. executeQuery();
+                    
+                    while (rs.next()) {
+                        DetalleVentaFacturaDTO detalle = new DetalleVentaFacturaDTO();
+                        detalle.setId(rs.getInt("id"));
+                        detalle.setProductoId(rs.getInt("productoId"));
+                        detalle.setProductoCodigo(rs.getString("productoCodigo"));
+                        detalle.setProductoNombre(rs.getString("productoNombre"));
+                        detalle.setCantidad(rs.getInt("cantidad"));
+                        detalle.setPrecioUnitario(rs.getDouble("precioUnitario"));
+                        
+                        detalles.add(detalle);
+                    }
+                }
+                
+                ventaFactura.setDetalles(detalles);
+            }
+        }
+        
+        return ventaFactura;
+    }
+    
+    
     
 }
