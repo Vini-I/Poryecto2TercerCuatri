@@ -1,13 +1,13 @@
 package modelo;
 
 public class Cliente {
-    private String cedula;
+    private int cedula;
     private String nombreCompleto;
     private String direccion;
     private String telefono;
     private String email;
 
-    public String getCedula() {
+    public int getCedula() {
         return cedula;
     }
 
@@ -27,7 +27,7 @@ public class Cliente {
         return email;
     }
 
-    public void setCedula(String cedula) {
+    public void setCedula(int cedula) {
         this.cedula = cedula;
     }
 
@@ -50,7 +50,7 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String cedula, String nombreCompleto, String direccion, String telefono, String email) {
+    public Cliente(int cedula, String nombreCompleto, String direccion, String telefono, String email) {
         this.cedula = cedula;
         this.nombreCompleto = nombreCompleto;
         this.direccion = direccion;
