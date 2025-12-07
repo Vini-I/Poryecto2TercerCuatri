@@ -1,4 +1,4 @@
-package Proveedores;
+package modelo.dtos;
 
 public class ProveedorDTO {
     private int idProveedor;

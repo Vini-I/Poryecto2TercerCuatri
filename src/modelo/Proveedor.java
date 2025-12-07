@@ -1,4 +1,4 @@
-package Proveedores;
+package modelo;
 
 public class Proveedor {
     private int idProveedor;
