@@ -6,6 +6,7 @@ public class Cliente {
     private String direccion;
     private String telefono;
     private String email;
+    private int numeroCompras;
 
     public int getCedula() {
         return cedula;
@@ -25,6 +26,10 @@ public class Cliente {
 
     public String getEmail() {
         return email;
+    }
+
+    public int getNumeroCompras() {
+        return numeroCompras;
     }
 
     public void setCedula(int cedula) {
@@ -47,6 +52,10 @@ public class Cliente {
         this.email = email;
     }
 
+    public void setNumeroCompras(int numeroCompras) {
+        this.numeroCompras = numeroCompras;
+    }
+
     public Cliente() {
     }
 
@@ -56,6 +65,15 @@ public class Cliente {
         this.direccion = direccion;
         this.telefono = telefono;
         this.email = email;
+    }
+
+    public Cliente(int cedula, String nombreCompleto, String direccion, String telefono, String email, int comprasRealizadas) {
+        this.cedula = cedula;
+        this.nombreCompleto = nombreCompleto;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.email = email;
+        this.numeroCompras = comprasRealizadas;
     }
 
     @Override
