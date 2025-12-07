@@ -1,7 +1,6 @@
 package modelo.mappers;
 
 import modelo.Producto;
-import modelo.Proveedor;
 import modelo.dtos.ProductoDTO;
 
 public class ProductoMapper {
@@ -10,7 +9,7 @@ public class ProductoMapper {
         // Utilidad, no instanciable
     }
 
-    public static ProductoDTO toDto(Producto producto, String nombreProveedor) {
+    public static ProductoDTO toDto(Producto producto) {
         if (producto == null) {
             return null;
         }

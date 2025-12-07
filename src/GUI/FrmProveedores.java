@@ -40,7 +40,7 @@ public class FrmProveedores extends javax.swing.JFrame {
         btnFacturas = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         jPanel4 = new javax.swing.JPanel();
-        lblGestionproductos = new javax.swing.JLabel();
+        lblGestion = new javax.swing.JLabel();
         txtFilter = new javax.swing.JTextField();
         btnDelete = new javax.swing.JButton();
         table = new javax.swing.JScrollPane();
@@ -155,10 +155,10 @@ public class FrmProveedores extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblGestionproductos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblGestionproductos.setForeground(new java.awt.Color(30, 41, 57));
-        lblGestionproductos.setText("Gestion de Productos");
-        jPanel4.add(lblGestionproductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
+        lblGestion.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblGestion.setForeground(new java.awt.Color(30, 41, 57));
+        lblGestion.setText("Gestion de Proveedores");
+        jPanel4.add(lblGestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
 
         txtFilter.setBackground(new java.awt.Color(255, 255, 255));
         txtFilter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -295,7 +295,7 @@ public class FrmProveedores extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lblGestionproductos;
+    private javax.swing.JLabel lblGestion;
     private javax.swing.JScrollPane table;
     private javax.swing.JTextField txtFilter;
     // End of variables declaration//GEN-END:variables
