@@ -1,6 +1,6 @@
 package modelo.daos;
 
-import db.ConexionDB;
+import bd.ConexionBD;
 import modelo.Producto;
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.List;
 public class ProductoDAO implements IProductoDAO {
 
     private Connection getConnection() throws SQLException {
-        return ConexionDB.getInstance().getConnection();
+        return ConexionBD.getInstance().getConnection();
     }
 
     @Override
