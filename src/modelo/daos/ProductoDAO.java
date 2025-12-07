@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductoDAO implements IProductoDao {
+public class ProductoDAO implements IProductoDAO {
 
     private Connection getConnection() throws SQLException {
         return MiConexionBD.getInstance().getConnection();
@@ -25,15 +25,15 @@ public class ProductoDAO implements IProductoDao {
             ps.setString(2, producto.getNombre());
             ps.setString(3, producto.getCategoria());
             ps.setDouble(4, producto.getPrecio());
-            ps.setInt(5, producto.getCantidad());
-            ps.setInt(6, producto.getProveedorId());
+            ps.setInt(5, producto.getStock());
+            ps.setInt(6, producto.getIdProveedor());
 
             int filas = ps.executeUpdate();
 
             if (filas > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
-                        producto.setId(rs.getInt(1));
+                        producto.setIdProducto(rs.getInt(1));
                     }
                 }
             }
@@ -83,9 +83,9 @@ public class ProductoDAO implements IProductoDao {
             ps.setString(2, producto.getNombre());
             ps.setString(3, producto.getCategoria());
             ps.setDouble(4, producto.getPrecio());
-            ps.setInt(5, producto.getCantidad());
-            ps.setInt(6, producto.getProveedorId());
-            ps.setInt(7, producto.getId());
+            ps.setInt(5, producto.getStock());
+            ps.setInt(6, producto.getIdProveedor());
+            ps.setInt(7, producto.getIdProducto());
 
             return ps.executeUpdate() > 0;
 
@@ -249,13 +249,13 @@ public class ProductoDAO implements IProductoDao {
 
     private Producto mapearProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
-        p.setId(rs.getInt("id"));
+        p.setIdProducto(rs.getInt("id"));
         p.setCodigo(rs.getString("codigo"));
         p.setNombre(rs.getString("nombre"));
         p.setCategoria(rs.getString("categoria"));
         p.setPrecio(rs.getDouble("precio"));
-        p.setCantidad(rs.getInt("cantidad"));
-        p.setProveedorId(rs.getInt("proveedor_id"));
+        p.setStock(rs.getInt("cantidad"));
+        p.setIdProveedor(rs.getInt("proveedor_id"));
         return p;
     }
 }
