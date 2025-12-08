@@ -33,9 +33,9 @@ public class PnlFacturas extends javax.swing.JPanel {
         btnDelete = new javax.swing.JButton();
         table = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        btnNew = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
+        setMaximumSize(new java.awt.Dimension(1200, 800));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
@@ -55,12 +55,12 @@ public class PnlFacturas extends javax.swing.JPanel {
         txtFilter.setForeground(new java.awt.Color(0, 0, 0));
         txtFilter.setText("Buscar...");
         txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
-        jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
+        jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 850, 40));
 
         btnDelete.setBackground(new java.awt.Color(231, 0, 11));
         btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnDelete.setText("Eliminar");
+        btnDelete.setText("PDF");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
         jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
@@ -82,19 +82,10 @@ public class PnlFacturas extends javax.swing.JPanel {
 
         jPanel4.add(table, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 940, 660));
 
-        btnNew.setBackground(new java.awt.Color(0, 166, 62));
-        btnNew.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnNew.setForeground(new java.awt.Color(255, 255, 255));
-        btnNew.setText("Nuevo");
-        btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
-
-        btnEdit.setBackground(new java.awt.Color(21, 93, 252));
-        btnEdit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnEdit.setForeground(new java.awt.Color(255, 255, 255));
-        btnEdit.setText("Editar");
-        btnEdit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Generar:");
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 20, -1, -1));
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
 
@@ -104,8 +95,7 @@ public class PnlFacturas extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnNew;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTable jTable1;

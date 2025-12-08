@@ -36,6 +36,7 @@ public class PnlProductos extends javax.swing.JPanel {
         btnNew = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
 
+        setMaximumSize(new java.awt.Dimension(1200, 800));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
