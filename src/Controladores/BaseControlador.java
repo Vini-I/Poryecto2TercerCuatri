@@ -4,6 +4,8 @@
  */
 package Controladores;
 
+import java.awt.Component;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -14,6 +16,7 @@ import javax.swing.JPanel;
 public abstract class BaseControlador<V>{
     
     protected V vista;
+    Component parent = null;
     
     public BaseControlador(V vista) {
         this.vista = vista;
@@ -21,24 +24,32 @@ public abstract class BaseControlador<V>{
     
     public void mostrarError(String mensaje) {
         if (vista instanceof JPanel) {
-            JOptionPane.showMessageDialog(
-                (JPanel) vista,
+            parent = (JPanel) vista;
+        } else if (vista instanceof JFrame) {
+            parent = (JFrame) vista;
+        }
+
+        JOptionPane.showMessageDialog(
+                parent,
                 mensaje,
                 "Error",
                 JOptionPane.ERROR_MESSAGE
-            );
-        }
+        );
     }
  
     public void mostrarMensaje(String mensaje, String titulo) {
         if (vista instanceof JPanel) {
-            JOptionPane.showMessageDialog(
-                (JPanel) vista,
+            parent = (JPanel) vista;
+        } else if (vista instanceof JFrame) {
+            parent = (JFrame) vista;
+        }
+
+        JOptionPane.showMessageDialog(
+                parent,
                 mensaje,
                 titulo,
                 JOptionPane.INFORMATION_MESSAGE
-            );
-        }
+        );
     }
 
     public boolean confirmar(String mensaje, String titulo) {

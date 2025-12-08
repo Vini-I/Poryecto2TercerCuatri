@@ -84,20 +84,20 @@ public class FacturaServicio {
             
             table.addCell(detalle.getProductoNombre());
             table.addCell(String. valueOf(detalle.getCantidad()));
-            table.addCell(String.format("$%.2f", detalle.getPrecioUnitario()));
-            table.addCell(String.format("$%.2f", subtotalDetalle));
+            table.addCell(String.format("¢%.2f", detalle.getPrecioUnitario()));
+            table.addCell(String.format("¢%.2f", subtotalDetalle));
         }
         
         document.add(table);
         document.add(new Paragraph("\n"));
 
-        document. add(new Paragraph("Subtotal: $" + String.format("%.2f", subtotal))
+        document. add(new Paragraph("Subtotal: ¢" + String.format("%.2f", subtotal))
             .setTextAlignment(TextAlignment.RIGHT));
         
-        document.add(new Paragraph("IVA (13%): $" + String.format("%.2f", impuesto))
+        document.add(new Paragraph("IVA (13%): ¢" + String.format("%.2f", impuesto))
             . setTextAlignment(TextAlignment.RIGHT));
  
-        document.add(new Paragraph("TOTAL: $" + String.format("%.2f", total))
+        document.add(new Paragraph("TOTAL: ¢" + String.format("%.2f", total))
                 .setTextAlignment(TextAlignment.RIGHT)
                 .setFontSize(14));
 

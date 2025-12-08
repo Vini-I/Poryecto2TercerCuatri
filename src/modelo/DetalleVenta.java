@@ -72,17 +72,4 @@ public class DetalleVenta {
                            "precioUnitario=%. 2f, subtotal=%.2f}",
                 id, getNombreProducto(), cantidad, precioUnitario, calcularSubtotal());
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DetalleVenta that = (DetalleVenta) o;
-        return id != null && id. equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

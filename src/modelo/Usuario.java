@@ -83,9 +83,12 @@ public class Usuario {
         
         if (esVendedor()) {
             return permiso.equals("CREAR_VENTA") || 
+                   permiso.equals("CREAR_CLIENTE") ||
                    permiso.equals("VER_PRODUCTOS") ||
                    permiso.equals("VER_CLIENTES") ||
-                   permiso.equals("VER_VENTAS");
+                   permiso.equals("VER_VENTAS")||
+                   permiso.equals("VER_FACTURAS")||
+                   permiso.equals("GENERAR_FACTURA");
         }
         
         return false;
@@ -101,19 +104,5 @@ public class Usuario {
                 ", ultimoAcceso=" + ultimoAcceso +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return id != null && id.equals(usuario.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-     
      
 }
