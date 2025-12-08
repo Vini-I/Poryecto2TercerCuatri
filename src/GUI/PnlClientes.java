@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import modelo.servicios.SessionManager;
+
 /**
  *
  * @author llean
@@ -15,6 +17,7 @@ public class PnlClientes extends javax.swing.JPanel {
      */
     public PnlClientes() {
         initComponents();
+        configurarPermisos();
     }
 
     /**
@@ -110,7 +113,13 @@ public class PnlClientes extends javax.swing.JPanel {
     private void txtFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFilterActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFilterActionPerformed
-
+private void configurarPermisos() {
+    SessionManager session = SessionManager.getInstance();
+    
+    btnEdit.setVisible(session.tienePermiso("EDITAR_CLIENTE"));
+    
+    btnDelete.setVisible(session.tienePermiso("ELIMINAR_CLIENTE"));
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;

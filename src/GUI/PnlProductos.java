@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import modelo.servicios.SessionManager;
+
 /**
  *
  * @author llean
@@ -15,8 +17,16 @@ public class PnlProductos extends javax.swing.JPanel {
      */
     public PnlProductos() {
         initComponents();
+        configurarPermisos(); //que vaya de primero porfa
     }
 
+    private void configurarPermisos() {
+        SessionManager session = SessionManager.getInstance();
+
+        btnNew.setVisible(session.tienePermiso("CREAR_PRODUCTO"));
+        btnEdit.setVisible(session.tienePermiso("EDITAR_PRODUCTO"));
+        btnDelete.setVisible(session.tienePermiso("ELIMINAR_PRODUCTO"));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,11 +66,6 @@ public class PnlProductos extends javax.swing.JPanel {
         txtFilter.setForeground(new java.awt.Color(0, 0, 0));
         txtFilter.setText("Buscar...");
         txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
-        txtFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFilterActionPerformed(evt);
-            }
-        });
         jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
@@ -106,10 +111,6 @@ public class PnlProductos extends javax.swing.JPanel {
 
         add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 800));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFilterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFilterActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

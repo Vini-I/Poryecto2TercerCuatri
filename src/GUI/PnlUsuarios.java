@@ -11,6 +11,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import modelo.dtos.UsuarioDTO;
+import modelo.servicios.SessionManager;
 import modelo.servicios.UsuarioServicio;
 
 /**
@@ -21,14 +22,16 @@ public class PnlUsuarios extends javax.swing.JPanel {
         private DefaultTableModel tableModel;
         private UsuarioControlador controlador;
         private UsuarioServicio usuarioServicio;
-        
+        private SessionManager session;
         
     /**
      * Creates new form PnlUsuarios
      */
     public PnlUsuarios() {
         initComponents();
+        session = SessionManager.getInstance();
         inicializar();
+        configurarPermisos();
         cargarDatos();
     }
     
@@ -93,7 +96,13 @@ public class PnlUsuarios extends javax.swing.JPanel {
         tableModel.fireTableDataChanged();
     }
     
-    
+    private void configurarPermisos() {
+        btnNew.setEnabled(session.tienePermiso("CREAR_USUARIO"));
+
+        btnEdit.setEnabled(session.tienePermiso("EDITAR_USUARIO"));
+
+        btnDelete.setEnabled(session.tienePermiso("ELIMINAR_USUARIO"));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

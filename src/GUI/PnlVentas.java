@@ -12,6 +12,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import modelo.dtos.VentaDTO;
+import modelo.servicios.SessionManager;
 import modelo.servicios.VentaServicio;
 
 /**
@@ -29,6 +30,7 @@ public class PnlVentas extends javax.swing.JPanel {
     public PnlVentas() {
         initComponents();
         inicializar();
+        configurarPermisos();
         cargarDatos();
     }
 
@@ -97,13 +99,14 @@ public class PnlVentas extends javax.swing.JPanel {
         tableModel.fireTableDataChanged();
     }
     
-    
-    
-    
-    
-    
-    
-    
+    private void configurarPermisos() {
+    SessionManager session = SessionManager.getInstance();
+
+    btnNew.setVisible(session.tienePermiso("CREAR_VENTA"));
+
+    btnDelete.setVisible(session.tienePermiso("ELIMINAR_VENTA"));
+}
+
     
     
     /**

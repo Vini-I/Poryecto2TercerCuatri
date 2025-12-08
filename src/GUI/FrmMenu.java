@@ -7,6 +7,7 @@ package GUI;
 import java.awt.CardLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import modelo.servicios.SessionManager;
 
 /**
  *
@@ -15,14 +16,17 @@ import javax.swing.JFrame;
 public class FrmMenu extends javax.swing.JFrame {
     private MenuGuia controlador;
     private CardLayout cardlayout;
+    private SessionManager session;
     /**
      * Creates new form FrmProductos
      */
     public FrmMenu() {
         initComponents();
+        session = SessionManager.getInstance();
         cardlayout = (CardLayout) panelContenido.getLayout();
         agregarPaneles();
         controlador = new MenuGuia(this);
+        configurarPermisos();
         mostrarProductos();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,6 +70,22 @@ public class FrmMenu extends javax.swing.JFrame {
         cardlayout.show(panelContenido, "FACTURAS");
         marcarBotonActivo(btnFacturas);
     }
+    
+    private void configurarPermisos() {
+        btnUsuarios.setEnabled(session.tienePermiso("VER_USUARIOS"));
+
+        btnVentas.setEnabled(session.tienePermiso("VER_VENTAS"));
+
+        btnProductos.setEnabled(session.tienePermiso("VER_PRODUCTOS"));
+  
+        btnClientes.setEnabled(session.tienePermiso("VER_CLIENTES"));
+ 
+        btnProveedores.setEnabled(session.tienePermiso("VER_PROVEEDORES"));
+
+        btnFacturas.setEnabled(session.tienePermiso("VER_FACTURAS"));
+
+    }
+    
     
     private JButton botonActivo = null;
     private void marcarBotonActivo(JButton boton) {
