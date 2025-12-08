@@ -98,7 +98,7 @@ public class PnlVentas extends javax.swing.JPanel {
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
 
-        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 1000, 800));
+        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 800));
     }// </editor-fold>//GEN-END:initComponents
 
 

@@ -3,7 +3,7 @@ package Controladores;
 
 import Controladores.BaseControlador;
 import GUI.FrmLogin;
-import GUI.FrmProductos;
+import GUI.FrmMenu;
 import GUI.FrmRegister;
 import modelo.Usuario;
 import modelo.servicios.AutenticacionServicio;
@@ -76,8 +76,8 @@ public class LoginControlador extends BaseControlador<FrmLogin> {
     }
     
     private void abrirVentanaPrincipal() {
-        FrmProductos frmProductos = new FrmProductos();
-        frmProductos.setVisible(true);
+        FrmMenu frmMenu = new FrmMenu();
+        frmMenu.setVisible(true);
     }
 
     public void limpiarCampos() {

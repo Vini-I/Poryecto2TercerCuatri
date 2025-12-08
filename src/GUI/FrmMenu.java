@@ -4,19 +4,80 @@
  */
 package GUI;
 
+import java.awt.CardLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
 /**
  *
  * @author llean
  */
 public class FrmMenu extends javax.swing.JFrame {
-
+    private MenuGuia controlador;
+    private CardLayout cardlayout;
     /**
      * Creates new form FrmProductos
      */
     public FrmMenu() {
         initComponents();
+        cardlayout = (CardLayout) panelContenido.getLayout();
+        agregarPaneles();
+        controlador = new MenuGuia(this);
+        mostrarProductos();
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+     private void agregarPaneles() {
+        panelContenido.add(new PnlProductos(), "PRODUCTOS");
+        panelContenido.add(new PnlProveedores(), "PROVEEDORES");
+        panelContenido.add(new PnlClientes(), "CLIENTES");
+        panelContenido.add(new PnlVentas(), "VENTAS");
+        panelContenido.add(new PnlUsuarios(), "USUARIOS");
+        panelContenido.add(new PnlFacturas(), "FACTURAS");
+    }
+    
+    public void mostrarProductos() {
+        cardlayout.show(panelContenido, "PRODUCTOS");
+        marcarBotonActivo(btnProductos);
+    }
+    
+    public void mostrarProveedores() {
+        cardlayout.show(panelContenido, "PROVEEDORES");
+        marcarBotonActivo(btnProveedores);
+    }
+    
+    public void mostrarClientes() {
+        cardlayout.show(panelContenido, "CLIENTES");
+        marcarBotonActivo(btnClientes);
+    }
+    
+    public void mostrarVentas() {
+        cardlayout.show(panelContenido, "VENTAS");
+        marcarBotonActivo(btnVentas);
+    }
+    
+    public void mostrarUsuarios() {
+        cardlayout.show(panelContenido, "USUARIOS");
+        marcarBotonActivo(btnUsuarios);
+    }
+    
+    public void mostrarFacturas() {
+        cardlayout.show(panelContenido, "FACTURAS");
+        marcarBotonActivo(btnFacturas);
+    }
+    
+    private JButton botonActivo = null;
+    private void marcarBotonActivo(JButton boton) {
+        if (botonActivo != null && botonActivo != btnLogout) {
+            botonActivo.setBackground(new java.awt.Color(52, 73, 94));
+        }
 
+        if (boton != btnLogout) {
+            boton.setBackground(new java.awt.Color(41, 128, 185));
+            botonActivo = boton;
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,21 +92,23 @@ public class FrmMenu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         btnLogout = new javax.swing.JButton();
-        btnActual = new javax.swing.JButton();
+        btnProductos = new javax.swing.JButton();
         btnProveedores = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
         btnVentas = new javax.swing.JButton();
         btnUsuarios = new javax.swing.JButton();
         btnFacturas = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
+        panelContenido = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1200, 800));
         setMinimumSize(new java.awt.Dimension(1200, 800));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setResizable(false);
 
         jPanel2.setBackground(new java.awt.Color(30, 41, 57));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setPreferredSize(new java.awt.Dimension(200, 500));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -67,18 +130,28 @@ public class FrmMenu extends javax.swing.JFrame {
         btnLogout.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(193, 0, 7)));
         btnLogout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnLogout.setIconTextGap(5);
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 750, 180, 40));
 
-        btnActual.setBackground(new java.awt.Color(21, 93, 252));
-        btnActual.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnActual.setForeground(new java.awt.Color(255, 255, 255));
-        btnActual.setText("Productos");
-        btnActual.setAlignmentX(0.5F);
-        btnActual.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 255)));
-        btnActual.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnActual.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        btnActual.setIconTextGap(5);
-        jPanel2.add(btnActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 180, 40));
+        btnProductos.setBackground(new java.awt.Color(21, 93, 252));
+        btnProductos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnProductos.setForeground(new java.awt.Color(255, 255, 255));
+        btnProductos.setText("Productos");
+        btnProductos.setAlignmentX(0.5F);
+        btnProductos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 255)));
+        btnProductos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnProductos.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnProductos.setIconTextGap(5);
+        btnProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductosActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 180, 40));
 
         btnProveedores.setBackground(new java.awt.Color(54, 65, 83));
         btnProveedores.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -89,6 +162,11 @@ public class FrmMenu extends javax.swing.JFrame {
         btnProveedores.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnProveedores.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnProveedores.setIconTextGap(5);
+        btnProveedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProveedoresActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 180, 40));
 
         btnClientes.setBackground(new java.awt.Color(54, 65, 83));
@@ -100,6 +178,11 @@ public class FrmMenu extends javax.swing.JFrame {
         btnClientes.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnClientes.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnClientes.setIconTextGap(5);
+        btnClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientesActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 180, 40));
 
         btnVentas.setBackground(new java.awt.Color(54, 65, 83));
@@ -111,6 +194,11 @@ public class FrmMenu extends javax.swing.JFrame {
         btnVentas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnVentas.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnVentas.setIconTextGap(5);
+        btnVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVentasActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 180, 40));
 
         btnUsuarios.setBackground(new java.awt.Color(54, 65, 83));
@@ -122,6 +210,11 @@ public class FrmMenu extends javax.swing.JFrame {
         btnUsuarios.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnUsuarios.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnUsuarios.setIconTextGap(5);
+        btnUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUsuariosActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 180, 40));
 
         btnFacturas.setBackground(new java.awt.Color(54, 65, 83));
@@ -133,15 +226,52 @@ public class FrmMenu extends javax.swing.JFrame {
         btnFacturas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnFacturas.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnFacturas.setIconTextGap(5);
+        btnFacturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFacturasActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnFacturas, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 180, 40));
 
         jSeparator2.setBackground(new java.awt.Color(54, 65, 83));
         jPanel2.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 103, 180, 10));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 800));
+        getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
+
+        panelContenido.setPreferredSize(new java.awt.Dimension(990, 790));
+        panelContenido.setLayout(new java.awt.CardLayout());
+        getContentPane().add(panelContenido, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
+        mostrarProductos();
+    }//GEN-LAST:event_btnProductosActionPerformed
+
+    private void btnProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProveedoresActionPerformed
+        mostrarProveedores();
+    }//GEN-LAST:event_btnProveedoresActionPerformed
+
+    private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
+        mostrarClientes();
+    }//GEN-LAST:event_btnClientesActionPerformed
+
+    private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
+        mostrarVentas();
+    }//GEN-LAST:event_btnVentasActionPerformed
+
+    private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
+        mostrarUsuarios();
+    }//GEN-LAST:event_btnUsuariosActionPerformed
+
+    private void btnFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturasActionPerformed
+        mostrarFacturas();
+    }//GEN-LAST:event_btnFacturasActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+       controlador.cerrarSesion();
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,10 +310,10 @@ public class FrmMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActual;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnFacturas;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnProveedores;
     private javax.swing.JButton btnUsuarios;
     private javax.swing.JButton btnVentas;
@@ -192,5 +322,6 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JPanel panelContenido;
     // End of variables declaration//GEN-END:variables
 }
