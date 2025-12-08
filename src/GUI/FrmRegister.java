@@ -4,17 +4,23 @@
  */
 package GUI;
 
+import Controladores.RegisterControlador;
+import javax.swing.JFrame;
+
 /**
  *
  * @author llean
  */
 public class FrmRegister extends javax.swing.JFrame {
-
+    private RegisterControlador controlador;
     /**
      * Creates new form FrmRegister
      */
     public FrmRegister() {
         initComponents();
+        controlador = new RegisterControlador(this);
+        configurarVentana();
+        configurarComboRoles();
     }
 
     /**
@@ -65,6 +71,11 @@ public class FrmRegister extends javax.swing.JFrame {
         btnLogin.setForeground(new java.awt.Color(0, 0, 0));
         btnLogin.setText("Volver al Login");
         btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 550, 250, 40));
 
         txtName.setBackground(new java.awt.Color(255, 255, 255));
@@ -79,6 +90,11 @@ public class FrmRegister extends javax.swing.JFrame {
         btnRegister.setForeground(new java.awt.Color(255, 255, 255));
         btnRegister.setText("Registrar Usuario");
         btnRegister.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(21, 93, 252)));
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 500, 290, 40));
 
         lblName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -144,6 +160,48 @@ public class FrmRegister extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbRoleActionPerformed
 
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        registrarUsuario();
+    }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        controlador.volverAlLogin();
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void registrarUsuario(){
+        String username = txtUsername.getText();
+        String nombreCompleto = txtName.getText();
+        String password = new String(txtPassword.getPassword());
+        String rol = (String) cmbRole.getSelectedItem();
+
+        if ("Seleccione un rol...".equals(rol)) {
+            rol = "";
+        }
+        
+        controlador.registrarUsuario(username, nombreCompleto, password, rol);
+    }
+    private void configurarVentana() {
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame. DISPOSE_ON_CLOSE);
+        txtUsername.requestFocus();
+    }
+    
+    private void configurarComboRoles() {
+        cmbRole.removeAllItems();
+        cmbRole.addItem("Seleccione un rol...");
+        cmbRole.addItem("VENDEDOR");
+        cmbRole.addItem("ADMIN");
+        cmbRole.setSelectedIndex(0);
+    }
+    
+    public void limpiarCampos() {
+        txtUsername.setText("");
+        txtName.setText("");
+        txtPassword.setText("");
+        cmbRole.setSelectedIndex(0);
+        txtUsername.requestFocus();
+    }
+    
     /**
      * @param args the command line arguments
      */
