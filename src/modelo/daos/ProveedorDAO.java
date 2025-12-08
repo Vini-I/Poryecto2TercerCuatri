@@ -2,6 +2,7 @@ package modelo.daos;
 
 import bd.ConexionBD;
 import modelo.Proveedor;
+import modelo.dtos.ProveedorDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class ProveedorDAO implements IProveedorDAO {
     }
 
     @Override
-    public boolean insertar(Proveedor proveedor) {
+    public boolean insertar(ProveedorDTO proveedor) {
         String sql = "INSERT INTO proveedores (nombre, contacto, direccion) " +
                 "VALUES (?, ?, ?)";
 
@@ -44,7 +45,7 @@ public class ProveedorDAO implements IProveedorDAO {
     }
 
     @Override
-    public Proveedor buscarPorId(int id) {
+    public ProveedorDTO buscarPorId(int id) {
         String sql = "SELECT id, nombre, contacto, direccion " +
                 "FROM proveedores WHERE id = ?";
 
@@ -67,7 +68,7 @@ public class ProveedorDAO implements IProveedorDAO {
     }
 
     @Override
-    public boolean actualizar(Proveedor proveedor) {
+    public boolean actualizar(ProveedorDTO proveedor) {
         String sql = "UPDATE proveedores SET nombre = ?, contacto = ?, direccion = ? " +
                 "WHERE id = ?";
 
@@ -104,10 +105,10 @@ public class ProveedorDAO implements IProveedorDAO {
     }
 
     @Override
-    public List<Proveedor> listarTodos() {
+    public List<ProveedorDTO> listarTodos() {
         String sql = "SELECT id, nombre, contacto, direccion FROM proveedores";
 
-        List<Proveedor> lista = new ArrayList<>();
+        List<ProveedorDTO> lista = new ArrayList<>();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -125,11 +126,11 @@ public class ProveedorDAO implements IProveedorDAO {
     }
 
     @Override
-    public List<Proveedor> buscarPorNombre(String nombre) {
+    public List<ProveedorDTO> buscarPorNombre(String nombre) {
         String sql = "SELECT id, nombre, contacto, direccion " +
                 "FROM proveedores WHERE nombre LIKE ?";
 
-        List<Proveedor> lista = new ArrayList<>();
+        List<ProveedorDTO> lista = new ArrayList<>();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -149,8 +150,8 @@ public class ProveedorDAO implements IProveedorDAO {
         return lista;
     }
 
-    private Proveedor mapearProveedor(ResultSet rs) throws SQLException {
-        Proveedor p = new Proveedor();
+    private ProveedorDTO mapearProveedor(ResultSet rs) throws SQLException {
+        ProveedorDTO p = new ProveedorDTO();
         p.setIdProveedor(rs.getInt("id"));
         p.setNombre(rs.getString("nombre"));
         // contacto / direccion son VARBINARY en BD

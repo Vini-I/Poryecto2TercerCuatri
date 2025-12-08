@@ -1,10 +1,10 @@
 package modelo.daos;
 
-import modelo.Proveedor;
+import modelo.dtos.ProveedorDTO;
 
 import java.util.List;
 
-public interface IProveedorDAO extends IDao<Proveedor> {
+public interface IProveedorDAO extends IDao<ProveedorDTO> {
 
-    List<Proveedor> buscarPorNombre(String nombre);
+    List<ProveedorDTO> buscarPorNombre(String nombre);
 }
