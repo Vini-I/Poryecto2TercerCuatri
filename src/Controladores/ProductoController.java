@@ -23,14 +23,12 @@ public class ProductoController {
 
     // Crear producto desde DTO
     public boolean crearProducto(ProductoDTO dto) {
-        Producto producto = ProductoMapper.toEntity(dto);
-        return productoDao.insertar(producto);
+        return productoDao.insertar(dto);
     }
 
     // Actualizar producto existente
     public boolean actualizarProducto(ProductoDTO dto) {
-        Producto producto = ProductoMapper.toEntity(dto);
-        return productoDao.actualizar(producto);
+        return productoDao.actualizar(dto);
     }
 
     // Eliminar producto por id
@@ -40,68 +38,48 @@ public class ProductoController {
 
     // Obtener un producto por id y devolver DTO con nombre de proveedor y agotado
     public ProductoDTO obtenerProductoPorId(int id) {
-        Producto producto = productoDao.buscarPorId(id);
+        ProductoDTO producto = productoDao.buscarPorId(id);
         if (producto == null) {
             return null;
         }
 
-        return ProductoMapper.toDto(producto);
+        return producto;
     }
 
     // Listar todos los productos
     public List<ProductoDTO> listarTodos() {
-        List<Producto> productos = productoDao.listarTodos();
-        List<ProductoDTO> dtos = new ArrayList<>();
-
-        for (Producto p : productos) {
-            dtos.add(ProductoMapper.toDto(p));
-        }
+        List<ProductoDTO> dtos = productoDao.listarTodos();
 
         return dtos;
     }
 
     // Listar productos por categoría
     public List<ProductoDTO> listarPorCategoria(String categoria) {
-        List<Producto> productos = productoDao.buscarPorCategoria(categoria);
-        List<ProductoDTO> dtos = new ArrayList<>();
-
-        for (Producto p : productos) {
-            dtos.add(ProductoMapper.toDto(p));
-        }
+        List<ProductoDTO> dtos = productoDao.buscarPorCategoria(categoria);
 
         return dtos;
     }
 
     // Buscar por código
     public ProductoDTO buscarPorCodigo(String codigo) {
-        Producto producto = productoDao.buscarPorCodigo(codigo);
+        ProductoDTO producto = productoDao.buscarPorCodigo(codigo);
         if (producto == null) {
             return null;
         }
 
-        return ProductoMapper.toDto(producto);
+        return producto;
     }
 
     // Listar productos agotados
     public List<ProductoDTO> listarAgotados() {
-        List<Producto> productos = productoDao.listarAgotados();
-        List<ProductoDTO> dtos = new ArrayList<>();
-
-        for (Producto p : productos) {
-            dtos.add(ProductoMapper.toDto(p));
-        }
+        List<ProductoDTO> dtos = productoDao.listarAgotados();
 
         return dtos;
     }
 
     // Listar productos con stock bajo
     public List<ProductoDTO> listarStockBajo(int umbral) {
-        List<Producto> productos = productoDao.listarStockBajo(umbral);
-        List<ProductoDTO> dtos = new ArrayList<>();
-
-        for (Producto p : productos) {
-            dtos.add(ProductoMapper.toDto(p));
-        }
+        List<ProductoDTO> dtos = productoDao.listarStockBajo(umbral);
 
         return dtos;
     }

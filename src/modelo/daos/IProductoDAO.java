@@ -1,18 +1,18 @@
 package modelo.daos;
 
-import modelo.Producto;
+import modelo.dtos.ProductoDTO;
 
 import java.util.List;
 
-public interface IProductoDAO extends IDao<Producto> {
+public interface IProductoDAO extends IDao<ProductoDTO> {
 
-    Producto buscarPorCodigo(String codigo);
+    ProductoDTO buscarPorCodigo(String codigo);
 
-    List<Producto> buscarPorCategoria(String categoria);
+    List<ProductoDTO> buscarPorCategoria(String categoria);
 
-    List<Producto> listarAgotados();
+    List<ProductoDTO> listarAgotados();
 
-    List<Producto> listarStockBajo(int umbral);
+    List<ProductoDTO> listarStockBajo(int umbral);
 
     double calcularValorTotalInventario();
 }
