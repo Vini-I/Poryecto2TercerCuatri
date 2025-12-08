@@ -3,17 +3,16 @@ package modelo.servicios;
 import java.util.ArrayList;
 import java.util.List;
 
-import modelo.Proveedor;
 import modelo.daos.IProveedorDAO;
+import modelo.daos.ProveedorDAO;
 import modelo.dtos.ProveedorDTO;
-import modelo.mappers.ProveedorMapper;
 
 public class ProveedorService {
 
     private final IProveedorDAO proveedorDao;
 
-    public ProveedorService(IProveedorDAO proveedorDao) {
-        this.proveedorDao = proveedorDao;
+    public ProveedorService() {
+        this.proveedorDao = new ProveedorDAO();
     }
 
     public List<String> validarProveedor(ProveedorDTO dto, boolean esNuevo) {
@@ -58,7 +57,6 @@ public class ProveedorService {
             return errores;
         }
 
-        dto.setIdProveedor(dto.getIdProveedor());
         return errores;
     }
 
@@ -75,6 +73,41 @@ public class ProveedorService {
         }
 
         return errores;
+    }
+
+    public List<String> eliminarProveedor(ProveedorDTO dto) {
+        List<String> errores = new ArrayList<>();
+
+        if (dto == null || dto.getIdProveedor() <= 0) {
+            errores.add("El ID del proveedor no es válido para eliminar.");
+            return errores;
+        }
+
+        boolean ok = proveedorDao.eliminar(dto.getIdProveedor());
+
+        if (!ok) {
+            errores.add("Error al eliminar el proveedor en la base de datos.");
+        }
+
+        return errores;
+    }
+
+    public boolean eliminarProveedor(int id) {
+        if (id <= 0) return false;
+        return proveedorDao.eliminar(id);
+    }
+
+    public ProveedorDTO obtenerProveedorPorId(int id) {
+        if (id <= 0) return null;
+        return proveedorDao.buscarPorId(id);
+    }
+
+    public List<ProveedorDTO> listarTodos() {
+        return proveedorDao.listarTodos();
+    }
+
+    public List<ProveedorDTO> buscarPorNombre(String nombre) {
+        return proveedorDao.buscarPorNombre(nombre);
     }
 
     private boolean esVacio(String s) {

@@ -1,62 +1,46 @@
 package controladores;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import Controladores.BaseControlador;
-import modelo.Proveedor;
-import modelo.daos.IProveedorDAO;
-import modelo.daos.IProductoDAO;
 import modelo.dtos.ProveedorDTO;
-import modelo.mappers.ProveedorMapper;
-import modelo.Producto;
+import modelo.servicios.ProveedorService;
 
 import javax.swing.*;
+import java.util.List;
 
 public class ProveedorController extends BaseControlador {
 
-    private final IProveedorDAO proveedorDao;
-    private final IProductoDAO productoDao;
+    private final ProveedorService proveedorService;
 
-    public ProveedorController(JDialog vista, IProveedorDAO proveedorDao, IProductoDAO productoDao) {
+    public ProveedorController(JDialog vista) {
         super(vista);
-        this.proveedorDao = proveedorDao;
-        this.productoDao = productoDao;
+        this.proveedorService = new ProveedorService();
     }
 
-    // Crear proveedor
-    public boolean crearProveedor(ProveedorDTO dto) {
-        return proveedorDao.insertar(dto);
+    public List<String> crearProveedor(ProveedorDTO dto) {
+        return proveedorService.crearProveedor(dto);
     }
 
-    // Actualizar proveedor
-    public boolean actualizarProveedor(ProveedorDTO dto) {
-        return proveedorDao.actualizar(dto);
+    public List<String> actualizarProveedor(ProveedorDTO dto) {
+        return proveedorService.actualizarProveedor(dto);
     }
 
-    // Eliminar proveedor por id
+    public List<String> eliminarProveedor(ProveedorDTO dto) {
+        return proveedorService.eliminarProveedor(dto);
+    }
+
     public boolean eliminarProveedor(int id) {
-        return proveedorDao.eliminar(id);
+        return proveedorService.eliminarProveedor(id);
     }
 
-    // Obtener proveedor por id
     public ProveedorDTO obtenerProveedorPorId(int id) {
-        ProveedorDTO proveedor = proveedorDao.buscarPorId(id);
-        
-        return proveedor;
+        return proveedorService.obtenerProveedorPorId(id);
     }
 
-    // Listar todos los proveedores
     public List<ProveedorDTO> listarTodos() {
-        List<ProveedorDTO> dtos = proveedorDao.listarTodos();
-
-        return dtos;
+        return proveedorService.listarTodos();
     }
 
-    // Buscar proveedores por nombre
     public List<ProveedorDTO> buscarPorNombre(String nombre) {
-        List<ProveedorDTO> dtos = proveedorDao.buscarPorNombre(nombre);
-
-        return dtos;
+        return proveedorService.buscarPorNombre(nombre);
     }
 }

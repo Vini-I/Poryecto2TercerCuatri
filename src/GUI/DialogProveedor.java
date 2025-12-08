@@ -4,17 +4,26 @@
  */
 package GUI;
 
+import controladores.ProveedorController;
+import java.util.List;
+import javax.swing.JOptionPane;
+import modelo.dtos.ProveedorDTO;
+
 /**
  *
  * @author llean
  */
 public class DialogProveedor extends javax.swing.JDialog {
+    
+    private ProveedorController proveedorController;
+    private ProveedorDTO proveedorActual;
 
     /**
      * Creates new form DialogProveedor
      */
     public DialogProveedor(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.proveedorController = new ProveedorController(this);
         initComponents();
     }
 
@@ -97,6 +106,11 @@ public class DialogProveedor extends javax.swing.JDialog {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Guardar");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 220, 40));
 
         btnLogin.setBackground(new java.awt.Color(204, 204, 204));
@@ -104,6 +118,11 @@ public class DialogProveedor extends javax.swing.JDialog {
         btnLogin.setForeground(new java.awt.Color(0, 0, 0));
         btnLogin.setText("Cancelar");
         btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 350, 230, 40));
 
         txtFilter5.setBackground(new java.awt.Color(255, 255, 255));
@@ -142,6 +161,81 @@ public class DialogProveedor extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        try {
+            ProveedorDTO dto = construirDto();
+            List<String> errores;
+
+            if (proveedorActual == null) {
+                errores = proveedorController.crearProveedor(dto);
+            } else {
+                errores = proveedorController.actualizarProveedor(dto);
+            }
+
+            if (!errores.isEmpty()) {
+                mostrarErrores(errores);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "Proveedor guardado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            dispose();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Ocurrió un error al guardar el proveedor.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+       dispose();
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    public void setProveedorActual(ProveedorDTO proveedor) {
+        this.proveedorActual = proveedor;
+        if (proveedorActual == null) return;
+
+        txtFilter1.setText(proveedorActual.getNombre()); 
+        txtFilter5.setText(proveedorActual.getContacto());
+        txtFilter6.setText(proveedorActual.getDireccion());
+
+        txtFilter3.setText(proveedorActual.getTelefono());
+    }
+    
+    private ProveedorDTO construirDto() {
+        ProveedorDTO dto = new ProveedorDTO();
+
+        if (proveedorActual != null) {
+            dto.setIdProveedor(proveedorActual.getIdProveedor());
+        }
+
+        dto.setNombre(txtFilter1.getText().trim());
+        dto.setContacto(txtFilter5.getText().trim());
+        dto.setDireccion(txtFilter6.getText().trim());
+
+        dto.setTelefono(txtFilter3.getText().trim());
+
+        return dto;
+    }
+    
+    private void mostrarErrores(List<String> errores) {
+        StringBuilder sb = new StringBuilder("Se encontraron los siguientes errores:\n\n");
+        for (String e : errores) {
+            sb.append("• ").append(e).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(),
+                "Errores de validación", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */
