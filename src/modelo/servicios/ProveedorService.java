@@ -51,15 +51,14 @@ public class ProveedorService {
             return errores;
         }
 
-        Proveedor entity = ProveedorMapper.toEntity(dto);
-        boolean ok = proveedorDao.insertar(ProveedorMapper.toDto(entity));
+        boolean ok = proveedorDao.insertar(dto);
 
         if (!ok) {
             errores.add("Error al guardar el proveedor en la base de datos.");
             return errores;
         }
 
-        dto.setIdProveedor(entity.getIdProveedor());
+        dto.setIdProveedor(dto.getIdProveedor());
         return errores;
     }
 
@@ -69,8 +68,7 @@ public class ProveedorService {
             return errores;
         }
 
-        Proveedor entity = ProveedorMapper.toEntity(dto);
-        boolean ok = proveedorDao.actualizar(ProveedorMapper.toDto(entity));
+        boolean ok = proveedorDao.actualizar(dto);
 
         if (!ok) {
             errores.add("Error al actualizar el proveedor en la base de datos.");
