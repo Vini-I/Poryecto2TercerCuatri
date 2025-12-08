@@ -125,7 +125,6 @@ public class PnlProveedores extends javax.swing.JPanel {
         txtFilter.setBackground(new java.awt.Color(255, 255, 255));
         txtFilter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtFilter.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter.setText("Buscar...");
         txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
         txtFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

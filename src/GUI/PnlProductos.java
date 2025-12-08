@@ -170,7 +170,6 @@ public class PnlProductos extends javax.swing.JPanel {
         txtFilter.setBackground(new java.awt.Color(255, 255, 255));
         txtFilter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtFilter.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter.setText("Buscar...");
         txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
         txtFilter.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
