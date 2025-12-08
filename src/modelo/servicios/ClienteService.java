@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import modelo.Cliente;
 import modelo.daos.IClienteDAO;
+import modelo.daos.ClienteDAO;
 import modelo.dtos.ClienteDTO;
-import modelo.mappers.ClienteMapper;
 
 public class ClienteService {
 
@@ -15,8 +14,8 @@ public class ClienteService {
     private final Pattern emailPattern =
             Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
-    public ClienteService(IClienteDAO clienteDao) {
-        this.clienteDao = clienteDao;
+    public ClienteService() {
+        this.clienteDao = new ClienteDAO();
     }
 
     public List<String> validarCliente(ClienteDTO dto, boolean esNuevo) {
@@ -27,12 +26,12 @@ public class ClienteService {
             return errores;
         }
 
-        if (esVacio(dto.getCedula())) {
+        if (dto.getCedula() <= 0) {
             errores.add("La cédula es obligatoria.");
         } else if (Integer.toString(dto.getCedula()).length() > 20) {
             errores.add("La cédula no puede superar 20 caracteres.");
         } else if (esNuevo) {
-            Cliente existente = ClienteMapper.toEntity(clienteDao.buscarPorId(dto.getCedula()));
+            ClienteDTO existente = clienteDao.buscarPorId(dto.getCedula());
             if (existente != null) {
                 errores.add("Ya existe un cliente con la cédula indicada.");
             }
@@ -51,10 +50,11 @@ public class ClienteService {
         if (dto.getTelefono() != null && dto.getTelefono().length() > 50) {
             errores.add("El teléfono no puede superar 50 caracteres.");
         }
-        
+
         if (dto.getEmail() != null && dto.getEmail().length() > 150) {
             errores.add("El correo no puede superar 150 caracteres.");
-        } else if (!esVacio(dto.getEmail()) && !emailPattern.matcher(dto.getEmail()).matches()) {
+        } else if (!esVacio(dto.getEmail()) &&
+                   !emailPattern.matcher(dto.getEmail()).matches()) {
             errores.add("El formato del correo electrónico no es válido.");
         }
 
@@ -78,7 +78,6 @@ public class ClienteService {
             return errores;
         }
 
-        dto.setCedula(dto.getCedula());
         return errores;
     }
 
@@ -97,11 +96,42 @@ public class ClienteService {
         return errores;
     }
 
-    private boolean esVacio(String s) {
-        return s == null || s.trim().isEmpty();
+    public List<String> eliminarCliente(ClienteDTO dto) {
+        List<String> errores = new ArrayList<>();
+
+        if (dto == null || dto.getCedula() <= 0) {
+            errores.add("El ID del cliente no es válido para eliminar.");
+            return errores;
+        }
+
+        boolean ok = clienteDao.eliminar(dto.getCedula());
+
+        if (!ok) {
+            errores.add("Error al eliminar el cliente en la base de datos.");
+        }
+
+        return errores;
     }
 
-    private boolean esVacio(Integer i) {
-        return i == null;
+    public boolean eliminarCliente(int id) {
+        if (id <= 0) return false;
+        return clienteDao.eliminar(id);
+    }
+
+    public ClienteDTO obtenerClientePorId(int id) {
+        if (id <= 0) return null;
+        return clienteDao.buscarPorId(id);
+    }
+
+    public List<ClienteDTO> buscarPorNombre(String nombre) {
+        return clienteDao.buscarPorNombre(nombre);
+    }
+
+    public List<ClienteDTO> listarTodos() {
+        return clienteDao.listarTodos();
+    }
+
+    private boolean esVacio(String s) {
+        return s == null || s.trim().isEmpty();
     }
 }

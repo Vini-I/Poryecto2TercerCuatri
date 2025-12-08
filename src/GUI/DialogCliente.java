@@ -4,17 +4,26 @@
  */
 package GUI;
 
+import controladores.ClienteController;
+import java.util.List;
+import javax.swing.JOptionPane;
+import modelo.dtos.ClienteDTO;
+
 /**
  *
  * @author llean
  */
 public class DialogCliente extends javax.swing.JDialog {
+    
+    private ClienteController clienteController;
+    private ClienteDTO clienteActual;
 
     /**
      * Creates new form DialogCliente
      */
     public DialogCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.clienteController = new ClienteController(this);
         initComponents();
     }
 
@@ -116,6 +125,11 @@ public class DialogCliente extends javax.swing.JDialog {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Guardar");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 220, 40));
 
         btnLogin.setBackground(new java.awt.Color(204, 204, 204));
@@ -123,6 +137,11 @@ public class DialogCliente extends javax.swing.JDialog {
         btnLogin.setForeground(new java.awt.Color(0, 0, 0));
         btnLogin.setText("Cancelar");
         btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 370, 230, 40));
 
         txtFilter5.setBackground(new java.awt.Color(255, 255, 255));
@@ -155,6 +174,92 @@ public class DialogCliente extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        try {
+            ClienteDTO dto = construirDto();
+            List<String> errores;
+
+            if (clienteActual == null) {
+                errores = clienteController.crearCliente(dto);
+            } else {
+                errores = clienteController.actualizarCliente(dto);
+            }
+
+            if (!errores.isEmpty()) {
+                mostrarErrores(errores);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "Cliente guardado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            dispose();
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "La cédula debe ser numérica.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Ocurrió un error al guardar el cliente.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnLoginActionPerformed
+    
+    public void setClienteActual(ClienteDTO cliente) {
+        this.clienteActual = cliente;
+        if (cliente != null) {
+            txtFilter1.setText(String.valueOf(cliente.getCedula()));
+            txtFilter3.setText(cliente.getNombreCompleto());
+            txtFilter2.setText(cliente.getDireccion());
+            txtFilter5.setText(cliente.getTelefono());
+            txtFilter4.setText(cliente.getEmail());
+        }
+    }
+    
+    private ClienteDTO construirDto() {
+        ClienteDTO dto = new ClienteDTO();
+
+        if (clienteActual != null) {
+            dto.setCedula(clienteActual.getCedula());
+        } else {
+            // Para nuevo, la cédula viene del campo
+            String cedulaTexto = txtFilter1.getText().trim();
+            if (!cedulaTexto.isEmpty()) {
+                dto.setCedula(Integer.parseInt(cedulaTexto));
+            } else {
+                dto.setCedula(0);
+            }
+        }
+
+        dto.setNombreCompleto(txtFilter3.getText().trim());
+        dto.setDireccion(txtFilter2.getText().trim());
+        dto.setTelefono(txtFilter5.getText().trim());
+        dto.setEmail(txtFilter4.getText().trim());
+
+        return dto;
+    }
+    
+    private void mostrarErrores(List<String> errores) {
+        StringBuilder sb = new StringBuilder("Se encontraron los siguientes errores:\n\n");
+        for (String e : errores) {
+            sb.append("• ").append(e).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(),
+                "Errores de validación", JOptionPane.WARNING_MESSAGE);
+    }
+
+    
+    
     /**
      * @param args the command line arguments
      */
