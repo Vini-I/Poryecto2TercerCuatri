@@ -4,19 +4,72 @@
  */
 package GUI;
 
+import java.awt.Window;
+import javax.swing.JOptionPane;
+import modelo.dtos.UsuarioDTO;
+import modelo.servicios.UsuarioServicio;
+
 /**
  *
  * @author llean
  */
 public class DialogUsuario extends javax.swing.JDialog {
+    private boolean confirmado = false;
+    private UsuarioDTO usuarioActual;
 
     /**
      * Creates new form DialogUsuario
      */
-    public DialogUsuario(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public DialogUsuario(Window parent, UsuarioDTO usuario) {
+        super(parent,"Usuario", ModalityType.APPLICATION_MODAL);
+        this.usuarioActual = usuario;
+        
+        if (usuario != null) {
+            setTitle("Editar Usuario");
+        } else {
+            setTitle("Nuevo Usuario");
+        }
         initComponents();
+        configurar();
+        
+        if (usuario != null) {
+            cargarDatosUsuario(usuario);
+        }
+        
+        pack();
+        setLocationRelativeTo(parent);
     }
+    
+    private void configurar() {
+
+        cmbRole.removeAllItems();
+        cmbRole.addItem("VENDEDOR");
+        cmbRole.addItem("ADMIN");
+
+        if (usuarioActual != null) {
+            txtUsuario.setEditable(false);
+            txtUsuario.setEnabled(false);
+            txtPassword.setEditable(false);
+            txtPassword.setEnabled(false);
+        }
+    }
+    
+    private void cargarDatosUsuario(UsuarioDTO usuario) {
+        txtUsuario.setText(usuario.getUsername());
+        txtNombre.setText(usuario.getNombre());
+        txtPassword.setText("******");
+        
+        if (usuario.getRol() != null) {
+            cmbRole.setSelectedItem(usuario.getRol());
+        }
+    }
+    
+    public boolean isConfirmado() {
+        return confirmado;
+    }
+    
+ 
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,16 +84,16 @@ public class DialogUsuario extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtFilter1 = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txtFilter3 = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
-        btnNew = new javax.swing.JButton();
-        btnLogin = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         cmbRole = new javax.swing.JComboBox<>();
-        txtFilter5 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -61,11 +114,11 @@ public class DialogUsuario extends javax.swing.JDialog {
         jLabel3.setText("Usuario:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, -1));
 
-        txtFilter1.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter1.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(txtFilter1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 460, 40));
+        txtUsuario.setBackground(new java.awt.Color(255, 255, 255));
+        txtUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtUsuario.setForeground(new java.awt.Color(0, 0, 0));
+        txtUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 460, 40));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
@@ -82,29 +135,39 @@ public class DialogUsuario extends javax.swing.JDialog {
         jLabel6.setText("Rol:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
 
-        txtFilter3.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter3.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(txtFilter3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 460, 40));
+        txtPassword.setBackground(new java.awt.Color(255, 255, 255));
+        txtPassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtPassword.setForeground(new java.awt.Color(0, 0, 0));
+        txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 460, 40));
 
         jSeparator1.setBackground(new java.awt.Color(153, 161, 175));
         jSeparator1.setForeground(new java.awt.Color(153, 161, 175));
         jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 333, 460, -1));
 
-        btnNew.setBackground(new java.awt.Color(0, 166, 62));
-        btnNew.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnNew.setForeground(new java.awt.Color(255, 255, 255));
-        btnNew.setText("Guardar");
-        btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel1.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 220, 40));
+        btnSave.setBackground(new java.awt.Color(0, 166, 62));
+        btnSave.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setText("Guardar");
+        btnSave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 220, 40));
 
-        btnLogin.setBackground(new java.awt.Color(204, 204, 204));
-        btnLogin.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(0, 0, 0));
-        btnLogin.setText("Cancelar");
-        btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 350, 230, 40));
+        btnCancel.setBackground(new java.awt.Color(204, 204, 204));
+        btnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCancel.setForeground(new java.awt.Color(0, 0, 0));
+        btnCancel.setText("Cancelar");
+        btnCancel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 350, 230, 40));
 
         cmbRole.setBackground(new java.awt.Color(255, 255, 255));
         cmbRole.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -118,11 +181,11 @@ public class DialogUsuario extends javax.swing.JDialog {
         });
         jPanel1.add(cmbRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 460, 40));
 
-        txtFilter5.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter5.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(txtFilter5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 460, 40));
+        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
+        txtNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombre.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 460, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,6 +209,108 @@ public class DialogUsuario extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbRoleActionPerformed
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if (usuarioActual == null) {
+            crearUsuario();
+        } else {
+            actualizarUsuario();
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        confirmado = false;
+        dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void crearUsuario() {
+        String username = txtUsuario.getText(). trim();
+        String nombreCompleto = txtNombre.getText().trim();
+        String password = txtPassword.getText();
+        String rol = (String) cmbRole.getSelectedItem();
+ 
+        if (username.isEmpty() || nombreCompleto.isEmpty() || password.isEmpty() || rol == null) {
+            JOptionPane.showMessageDialog(this,
+                "Todos los campos son obligatorios",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (username.length() < 3) {
+            JOptionPane. showMessageDialog(this,
+                "El usuario debe tener al menos 3 caracteres",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (password.length() < 6) {
+            JOptionPane.showMessageDialog(this,
+                "La contraseña debe tener al menos 6 caracteres",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            modelo.servicios.UsuarioServicio servicio = new modelo.servicios. UsuarioServicio();
+            servicio.registrarUsuario(username, password, nombreCompleto, rol);
+            
+            JOptionPane.showMessageDialog(this,
+                "Usuario creado exitosamente",
+                "Éxito",
+                JOptionPane. INFORMATION_MESSAGE);
+            
+            confirmado = true;
+            dispose();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al crear usuario: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    private void actualizarUsuario() {
+        String nombreCompleto = txtNombre.getText().trim();
+        String rol = (String) cmbRole.getSelectedItem();
+
+        if (nombreCompleto.isEmpty() || rol == null) {
+            JOptionPane.showMessageDialog(this,
+                "Complete todos los campos",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            UsuarioServicio servicio = new UsuarioServicio();
+            servicio.actualizarUsuario(usuarioActual.getId(), nombreCompleto, rol);
+            
+            JOptionPane.showMessageDialog(this,
+                "Usuario actualizado exitosamente",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            confirmado = true;
+            dispose();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al actualizar usuario: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    
+   
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -176,7 +341,7 @@ public class DialogUsuario extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                DialogUsuario dialog = new DialogUsuario(new javax.swing.JFrame(), true);
+                DialogUsuario dialog = new DialogUsuario(new javax.swing.JFrame(), null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -189,8 +354,8 @@ public class DialogUsuario extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> cmbRole;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -200,8 +365,8 @@ public class DialogUsuario extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField txtFilter1;
-    private javax.swing.JTextField txtFilter3;
-    private javax.swing.JTextField txtFilter5;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
