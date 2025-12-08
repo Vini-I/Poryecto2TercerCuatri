@@ -4,6 +4,14 @@
  */
 package GUI;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import modelo.dtos.ClienteDTO;
+import modelo.servicios.ClienteService;
 import modelo.servicios.SessionManager;
 
 /**
@@ -11,13 +19,77 @@ import modelo.servicios.SessionManager;
  * @author llean
  */
 public class PnlClientes extends javax.swing.JPanel {
-
+    
+    private DefaultTableModel tableModel;
+    private ClienteService clienteService;
+    private SessionManager session;
+    
     /**
      * Creates new form PnlClientes
      */
     public PnlClientes() {
         initComponents();
         configurarPermisos();
+        inicializar();
+        cargarDatos();
+    }
+    
+    private void inicializar() {
+        String[] columnas = {"Cédula", "Nombre Completo", "Teléfono", "Email"};
+        tableModel = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        jTable1.setModel(tableModel);
+
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);   // Cédula
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);  // Nombre
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(120);  // Teléfono
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(200);  // Email
+
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        clienteService = new ClienteService();
+    }
+    
+    private void cargarDatos() {
+        try {
+            List<ClienteDTO> clientes = clienteService.listarTodos();
+            actualizarTabla(clientes);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar clientes: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void actualizarTabla(List<ClienteDTO> clientes) {
+        tableModel.setRowCount(0);
+
+        for (ClienteDTO c : clientes) {
+            Object[] fila = {
+                c.getCedula(),
+                c.getNombreCompleto(),
+                c.getTelefono(),
+                c.getEmail()
+            };
+            tableModel.addRow(fila);
+        }
+
+        tableModel.fireTableDataChanged();
+    }
+
+    private ClienteDTO obtenerClienteDeFila(int row) {
+        ClienteDTO dto = new ClienteDTO();
+        dto.setCedula((Integer) tableModel.getValueAt(row, 0));
+        dto.setNombreCompleto((String) tableModel.getValueAt(row, 1));
+        dto.setTelefono((String) tableModel.getValueAt(row, 2));
+        dto.setEmail((String) tableModel.getValueAt(row, 3));
+        return dto;
     }
 
     /**
@@ -59,9 +131,9 @@ public class PnlClientes extends javax.swing.JPanel {
         txtFilter.setForeground(new java.awt.Color(0, 0, 0));
         txtFilter.setText("Buscar...");
         txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
-        txtFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFilterActionPerformed(evt);
+        txtFilter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtFilterKeyReleased(evt);
             }
         });
         jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
@@ -71,6 +143,11 @@ public class PnlClientes extends javax.swing.JPanel {
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Eliminar");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
@@ -96,6 +173,11 @@ public class PnlClientes extends javax.swing.JPanel {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Nuevo");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
 
         btnEdit.setBackground(new java.awt.Color(21, 93, 252));
@@ -103,6 +185,11 @@ public class PnlClientes extends javax.swing.JPanel {
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Editar");
         btnEdit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
@@ -110,9 +197,104 @@ public class PnlClientes extends javax.swing.JPanel {
         add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 800));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFilterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFilterActionPerformed
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        java.awt.Frame parent = (java.awt.Frame) SwingUtilities.getWindowAncestor(this);
+
+        DialogCliente dialog = new DialogCliente(parent, true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
+        cargarDatos();
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un cliente de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ClienteDTO cliente = obtenerClienteDeFila(selectedRow);
+
+        java.awt.Frame parent = (java.awt.Frame) SwingUtilities.getWindowAncestor(this);
+        DialogCliente dialog = new DialogCliente(parent, true);
+        dialog.setClienteActual(cliente); // método que ya tienes en DialogCliente
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
+        cargarDatos();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un cliente de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de que desea eliminar el cliente seleccionado?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (opcion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        ClienteDTO cliente = obtenerClienteDeFila(selectedRow);
+
+        boolean ok = clienteService.eliminarCliente(cliente.getCedula());
+        if (!ok) {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo eliminar el cliente.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            cargarDatos();
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void txtFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFilterKeyReleased
+        String criterio = txtFilter.getText().trim().toLowerCase();
+
+        if (criterio.isEmpty()) {
+            cargarDatos();
+            return;
+        }
+
+        try {
+            List<ClienteDTO> clientes = clienteService.listarTodos();
+            List<ClienteDTO> filtrados = new ArrayList<>();
+
+            for (ClienteDTO c : clientes) {
+                String cedulaStr = String.valueOf(c.getCedula());
+                String nombre = c.getNombreCompleto() != null ? c.getNombreCompleto().toLowerCase() : "";
+                String email = c.getEmail() != null ? c.getEmail().toLowerCase() : "";
+                String telefono = c.getTelefono() != null ? c.getTelefono().toLowerCase() : "";
+
+                if (cedulaStr.contains(criterio)
+                        || nombre.contains(criterio)
+                        || email.contains(criterio)
+                        || telefono.contains(criterio)) {
+                    filtrados.add(c);
+                }
+            }
+
+            actualizarTabla(filtrados);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar clientes: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_txtFilterKeyReleased
 private void configurarPermisos() {
     SessionManager session = SessionManager.getInstance();
     
