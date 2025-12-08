@@ -6,7 +6,6 @@ package bd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -21,7 +20,7 @@ public class ConexionBD {
     private final String password;
 
     private ConexionBD() {
-        this.url = "jdbc:mysql://localhost:3307/tienda_electronica?useSSL=false&serverTimezone=UTC";
+        this.url = "jdbc:mysql://localhost:3306/Tienda?useSSL=false&serverTimezone=UTC";
         this.user = "root";
         this.password = "root123";
         
