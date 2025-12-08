@@ -22,14 +22,12 @@ public class ProveedorController {
 
     // Crear proveedor
     public boolean crearProveedor(ProveedorDTO dto) {
-        Proveedor proveedor = ProveedorMapper.toEntity(dto);
-        return proveedorDao.insertar(proveedor);
+        return proveedorDao.insertar(dto);
     }
 
     // Actualizar proveedor
     public boolean actualizarProveedor(ProveedorDTO dto) {
-        Proveedor proveedor = ProveedorMapper.toEntity(dto);
-        return proveedorDao.actualizar(proveedor);
+        return proveedorDao.actualizar(dto);
     }
 
     // Eliminar proveedor por id
@@ -39,34 +37,21 @@ public class ProveedorController {
 
     // Obtener proveedor por id
     public ProveedorDTO obtenerProveedorPorId(int id) {
-        Proveedor proveedor = proveedorDao.buscarPorId(id);
-        if (proveedor == null) {
-            return null;
-        }
+        ProveedorDTO proveedor = proveedorDao.buscarPorId(id);
         
-        return ProveedorMapper.toDto(proveedor);
+        return proveedor;
     }
 
     // Listar todos los proveedores
     public List<ProveedorDTO> listarTodos() {
-        List<Proveedor> proveedores = proveedorDao.listarTodos();
-        List<ProveedorDTO> dtos = new ArrayList<>();
-
-        for (Proveedor p : proveedores) {
-            dtos.add(ProveedorMapper.toDto(p));
-        }
+        List<ProveedorDTO> dtos = proveedorDao.listarTodos();
 
         return dtos;
     }
 
     // Buscar proveedores por nombre
     public List<ProveedorDTO> buscarPorNombre(String nombre) {
-        List<Proveedor> proveedores = proveedorDao.buscarPorNombre(nombre);
-        List<ProveedorDTO> dtos = new ArrayList<>();
-
-        for (Proveedor p : proveedores) {
-            dtos.add(ProveedorMapper.toDto(p));
-        }
+        List<ProveedorDTO> dtos = proveedorDao.buscarPorNombre(nombre);
 
         return dtos;
     }
