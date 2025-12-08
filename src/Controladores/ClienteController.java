@@ -1,18 +1,19 @@
 package controladores;
 
+import Controladores.BaseControlador;
+import modelo.daos.IClienteDAO;
+import modelo.dtos.ClienteDTO;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import modelo.Cliente;
-import modelo.daos.IClienteDAO;
-import modelo.dtos.ClienteDTO;
-import modelo.mappers.ClienteMapper;
-
-public class ClienteController {
+public class ClienteController extends BaseControlador {
 
     private final IClienteDAO clienteDao;
 
-    public ClienteController(IClienteDAO clienteDao) {
+    public ClienteController(JDialog vista, IClienteDAO clienteDao) {
+        super(vista);
         this.clienteDao = clienteDao;
     }
 
