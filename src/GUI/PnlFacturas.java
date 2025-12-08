@@ -4,18 +4,109 @@
  */
 package GUI;
 
+import Controladores.FacturaControlador;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+import modelo.dtos.VentaDTO;
+import modelo.servicios.VentaServicio;
+
 /**
  *
  * @author llean
  */
 public class PnlFacturas extends javax.swing.JPanel {
-
+    private DefaultTableModel tableModel;
+    private FacturaControlador controlador;
+    private VentaServicio ventaServicio;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     /**
      * Creates new form PnlFacturas
      */
     public PnlFacturas() {
         initComponents();
+        inicializar();
+        cargarDatos();
     }
+    
+     private void inicializar() {
+
+        String[] columnas = {"ID", "Cliente", "Fecha", "Estado"};
+        tableModel = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaVentas.setModel(tableModel);
+
+        tablaVentas.getColumnModel(). getColumn(0).setPreferredWidth(50);
+        tablaVentas.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tablaVentas.getColumnModel().getColumn(2).setPreferredWidth(150); 
+        tablaVentas.getColumnModel().getColumn(3).setPreferredWidth(100);
+
+        tablaVentas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        controlador = new FacturaControlador(this);
+        ventaServicio = new VentaServicio();
+    }
+    
+    private void cargarDatos() {
+        try {
+            List<VentaDTO> ventas = ventaServicio.obtenerTodos();
+            actualizarTabla(ventas);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar ventas: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
+     private VentaDTO obtenerVentaDeFila(int row) {
+         VentaDTO venta = new VentaDTO();
+         venta.setId((Integer) tableModel.getValueAt(row, 0));
+         venta.setClienteId((Integer) tableModel.getValueAt(row, 1));
+
+         String fechaStr = (String) tableModel.getValueAt(row, 2);
+         if (fechaStr != null && !fechaStr.isEmpty()) {
+             try {
+                 venta.setFecha(java.time.LocalDateTime.parse(fechaStr, formatter));
+             } catch (Exception e) {
+             }
+         }
+
+         venta.setEstado((String) tableModel.getValueAt(row, 3));
+
+         return venta;
+    }
+    
+    public void actualizarTabla(List<VentaDTO> ventas) {
+        tableModel.setRowCount(0);
+
+        for (VentaDTO venta : ventas) {
+            Object[] fila = {
+                venta.getId(),
+                venta.getClienteId(), // TODO: Mostrar nombre del cliente
+                venta.getFecha() != null ? venta.getFecha().format(formatter) : "",
+                venta.getEstado() != null ? venta.getEstado() : ""
+            };
+            tableModel.addRow(fila);
+        }
+        
+        tableModel.fireTableDataChanged();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,10 +120,10 @@ public class PnlFacturas extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         lblGestion = new javax.swing.JLabel();
-        txtFilter = new javax.swing.JTextField();
-        btnDelete = new javax.swing.JButton();
+        txtBuscar = new javax.swing.JTextField();
+        btnPDF = new javax.swing.JButton();
         table = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaVentas = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1200, 800));
@@ -50,24 +141,33 @@ public class PnlFacturas extends javax.swing.JPanel {
         lblGestion.setText("Gestion de Facturas");
         jPanel4.add(lblGestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
 
-        txtFilter.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter.setText("Buscar...");
-        txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
-        jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 850, 40));
+        txtBuscar.setBackground(new java.awt.Color(255, 255, 255));
+        txtBuscar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtBuscar.setForeground(new java.awt.Color(0, 0, 0));
+        txtBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
+        jPanel4.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 850, 40));
 
-        btnDelete.setBackground(new java.awt.Color(231, 0, 11));
-        btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnDelete.setText("PDF");
-        btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
+        btnPDF.setBackground(new java.awt.Color(231, 0, 11));
+        btnPDF.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnPDF.setForeground(new java.awt.Color(255, 255, 255));
+        btnPDF.setText("PDF");
+        btnPDF.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPDFActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnPDF, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
-        jTable1.setBackground(new java.awt.Color(255, 255, 255));
-        jTable1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(0, 0, 0));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaVentas.setBackground(new java.awt.Color(255, 255, 255));
+        tablaVentas.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        tablaVentas.setForeground(new java.awt.Color(0, 0, 0));
+        tablaVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -78,7 +178,7 @@ public class PnlFacturas extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        table.setViewportView(jTable1);
+        table.setViewportView(tablaVentas);
 
         jPanel4.add(table, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 940, 660));
 
@@ -92,15 +192,48 @@ public class PnlFacturas extends javax.swing.JPanel {
         add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 800));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPDFActionPerformed
+        int selectedRow = tablaVentas.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane. showMessageDialog(this,
+                "Por favor, seleccione una venta de la tabla",
+                "Advertencia",
+                JOptionPane. WARNING_MESSAGE);
+            return;
+        }
+        
+        VentaDTO venta = obtenerVentaDeFila(selectedRow);
+        controlador.generarFactura(venta);
+    }//GEN-LAST:event_btnPDFActionPerformed
+
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        String criterio = txtBuscar.getText().trim();
+
+        if (criterio.isEmpty()) {
+            cargarDatos();
+        } else {
+            try {
+                List<VentaDTO> ventas = ventaServicio.buscar(criterio);
+                actualizarTabla(ventas);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                        "Error al buscar: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_txtBuscarKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnPDF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblGestion;
+    private javax.swing.JTable tablaVentas;
     private javax.swing.JScrollPane table;
-    private javax.swing.JTextField txtFilter;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,18 +4,96 @@
  */
 package GUI;
 
+import Controladores.UsuarioControlador;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import modelo.dtos.UsuarioDTO;
+import modelo.servicios.UsuarioServicio;
+
 /**
  *
  * @author llean
  */
 public class PnlUsuarios extends javax.swing.JPanel {
-
+        private DefaultTableModel tableModel;
+        private UsuarioControlador controlador;
+        private UsuarioServicio usuarioServicio;
+        
+        
     /**
      * Creates new form PnlUsuarios
      */
     public PnlUsuarios() {
         initComponents();
+        inicializar();
+        cargarDatos();
     }
+    
+    private void inicializar() {
+        String[] columnas = {"ID", "Usuario", "Nombre Completo", "Rol"};
+        tableModel = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        jTable1.setModel(tableModel);
+        
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);  // ID
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(150); // Usuario
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(250); // Nombre
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(100); // Rol
+        
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        controlador = new UsuarioControlador(this);
+        usuarioServicio = new UsuarioServicio();
+    }
+    
+
+    
+    
+    
+    private void cargarDatos() {
+        try {
+            List<UsuarioDTO> usuarios = usuarioServicio.obtenerTodos();
+            actualizarTabla(usuarios);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar usuarios: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+     private UsuarioDTO obtenerUsuarioDeFila(int row) {
+        UsuarioDTO usuario = new UsuarioDTO();
+        usuario.setId((Integer) tableModel.getValueAt(row, 0));
+        usuario.setUsername((String) tableModel.getValueAt(row, 1));
+        usuario.setNombre((String) tableModel.getValueAt(row, 2));
+        usuario.setRol((String) tableModel.getValueAt(row, 3));
+        return usuario;
+    }
+     
+    public void actualizarTabla(List<UsuarioDTO> usuarios) {
+
+        tableModel.setRowCount(0);
+
+        for (UsuarioDTO usuario : usuarios) {
+            Object[] fila = {
+                usuario.getId(),
+                usuario.getUsername(),
+                usuario.getNombre(),
+                usuario. getRol() != null ? usuario.getRol(). toString() : ""
+            };
+            tableModel.addRow(fila);
+        }
+        tableModel.fireTableDataChanged();
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,7 +107,7 @@ public class PnlUsuarios extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         lblGestion = new javax.swing.JLabel();
-        txtFilter = new javax.swing.JTextField();
+        txtBuscar = new javax.swing.JTextField();
         btnDelete = new javax.swing.JButton();
         table = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -50,18 +128,32 @@ public class PnlUsuarios extends javax.swing.JPanel {
         lblGestion.setText("Gestion de Usuarios");
         jPanel4.add(lblGestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 19, -1, -1));
 
-        txtFilter.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter.setText("Buscar...");
-        txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
-        jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
+        txtBuscar.setBackground(new java.awt.Color(255, 255, 255));
+        txtBuscar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtBuscar.setForeground(new java.awt.Color(0, 0, 0));
+        txtBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
+        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarActionPerformed(evt);
+            }
+        });
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
+        jPanel4.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
 
         btnDelete.setBackground(new java.awt.Color(231, 0, 11));
         btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Eliminar");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
@@ -87,6 +179,11 @@ public class PnlUsuarios extends javax.swing.JPanel {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Nuevo");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
 
         btnEdit.setBackground(new java.awt.Color(21, 93, 252));
@@ -94,12 +191,88 @@ public class PnlUsuarios extends javax.swing.JPanel {
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Editar");
         btnEdit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
 
         add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 800));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        DialogUsuario dialog = new DialogUsuario(
+                SwingUtilities.getWindowAncestor(this),
+                null // null = nuevo usuario
+        );
+        dialog.setVisible(true);
+
+        if (dialog.isConfirmado()) {
+            cargarDatos(); // Refrescar tabla
+        }
+    }//GEN-LAST:event_btnNewActionPerformed
+   
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un usuario de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        UsuarioDTO usuario = obtenerUsuarioDeFila(selectedRow);
+
+        DialogUsuario dialog = new DialogUsuario(
+                SwingUtilities.getWindowAncestor(this),
+                usuario 
+        );
+        dialog.setVisible(true);
+
+        if (dialog.isConfirmado()) {
+            cargarDatos(); // Refrescar tabla
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un usuario de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        UsuarioDTO usuario = obtenerUsuarioDeFila(selectedRow);
+        controlador.eliminarUsuario(usuario);
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        String criterio = txtBuscar.getText().trim();
+        
+        if (criterio.isEmpty()) {
+            cargarDatos();
+        } else {
+            try {
+                List<UsuarioDTO> usuarios = usuarioServicio.buscar(criterio);
+                actualizarTabla(usuarios);
+            } catch (Exception e) {
+                JOptionPane. showMessageDialog(this,
+                    "Error al buscar: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_txtBuscarKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -111,6 +284,6 @@ public class PnlUsuarios extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblGestion;
     private javax.swing.JScrollPane table;
-    private javax.swing.JTextField txtFilter;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

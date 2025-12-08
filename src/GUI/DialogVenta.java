@@ -4,19 +4,158 @@
  */
 package GUI;
 
+import java.awt.Component;
+import java.awt.Window;
+import java.util.List;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import modelo.dtos.ProductoDTO;
+
 /**
  *
  * @author llean
  */
 public class DialogVenta extends javax.swing.JDialog {
-
+    private VentaDialogAyuda controlador;
+    private boolean confirmado = false;
     /**
      * Creates new form DialogVenta
      */
-    public DialogVenta(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public DialogVenta(Window parent) {
+        super(parent, "Venta",ModalityType.APPLICATION_MODAL);
         initComponents();
+        configurar();
+
+        controlador = new VentaDialogAyuda(this);
+
+        controlador.cargarProductos();
+        
+        pack();
+        setLocationRelativeTo(parent);
     }
+    
+    private void configurar() {   
+        JComboBox combo = cmbProducto;
+        cmbProducto. setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value,
+                    int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof ProductoDTO) {
+                    ProductoDTO producto = (ProductoDTO) value;
+                    setText(producto.getNombre());
+                } else if (value == null) {
+                    setText("Seleccione un producto...");
+                }
+                return this;
+            }
+        });
+
+        combo.addActionListener(e -> {
+            Object selected = combo.getSelectedItem();
+            if (selected instanceof ProductoDTO) {
+                ProductoDTO producto = (ProductoDTO) selected;
+                txtPrecio.setText(String.format("%.2f", producto.getPrecio()));
+            } else {
+                txtPrecio.setText("");
+            }
+        });
+ 
+        txtPrecio.setEditable(false);
+        txtPrecio.setEnabled(false);
+    }
+    
+    
+    private void guardarVenta() {
+
+        String cedulaStr = txtCedula.getText(). trim();
+        if (cedulaStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Por favor, ingrese la cédula del cliente",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int cedula;
+        try {
+            cedula = Integer.parseInt(cedulaStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                "La cédula debe ser un número válido",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Object selected = cmbProducto.getSelectedItem();
+        if (!(selected instanceof ProductoDTO)) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un producto", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        ProductoDTO producto = (ProductoDTO) selected;
+        
+        String cantidadStr = txtCantidad.getText().trim();
+        if (cantidadStr.isEmpty()) {
+            JOptionPane. showMessageDialog(this,
+                "Por favor, ingrese la cantidad",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadStr);
+            if (cantidad <= 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                "La cantidad debe ser un número válido mayor a 0",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        double precio = producto.getPrecio();
+
+        controlador.guardarVenta(cedula, producto.getIdProducto(), cantidad, precio);
+    }
+    
+     public void cargarProductos(List<ProductoDTO> productos) {
+         JComboBox combo = cmbProducto;
+        cmbProducto.removeAllItems();
+        cmbProducto.addItem(null);
+        for (ProductoDTO producto : productos) {
+            combo.addItem(producto);
+        }
+    }
+    
+    public void ventaGuardadaExitosamente() {
+        JOptionPane.showMessageDialog(this,
+            "Venta registrada exitosamente",
+            "Éxito",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        confirmado = true;
+        dispose();
+    }
+    
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this,
+            mensaje,
+            "Error",
+            JOptionPane. ERROR_MESSAGE);
+    }
+    
+    public boolean isConfirmado() {
+        return confirmado;
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,15 +171,15 @@ public class DialogVenta extends javax.swing.JDialog {
         Venta = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtFilter1 = new javax.swing.JTextField();
+        txtCedula = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtFilter2 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        txtCantidad = new javax.swing.JTextField();
+        cmbProducto = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        txtFilter4 = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
-        btnNew = new javax.swing.JButton();
-        btnLogin = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -66,58 +205,68 @@ public class DialogVenta extends javax.swing.JDialog {
         jLabel3.setText("Cedula:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
 
-        txtFilter1.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter1.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(txtFilter1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 460, 40));
+        txtCedula.setBackground(new java.awt.Color(255, 255, 255));
+        txtCedula.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtCedula.setForeground(new java.awt.Color(0, 0, 0));
+        txtCedula.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(txtCedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 460, 40));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Producto:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
-        txtFilter2.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter2.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(txtFilter2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, 230, 40));
+        txtCantidad.setBackground(new java.awt.Color(255, 255, 255));
+        txtCantidad.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtCantidad.setForeground(new java.awt.Color(0, 0, 0));
+        txtCantidad.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, 230, 40));
 
-        jComboBox2.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jComboBox2.setForeground(new java.awt.Color(0, 0, 0));
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Computadoras", "Perifericos", "Monitores", "Audio" }));
-        jComboBox2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 460, 40));
+        cmbProducto.setBackground(new java.awt.Color(255, 255, 255));
+        cmbProducto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        cmbProducto.setForeground(new java.awt.Color(0, 0, 0));
+        cmbProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Computadoras", "Perifericos", "Monitores", "Audio" }));
+        cmbProducto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(cmbProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 460, 40));
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Precio:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
 
-        txtFilter4.setBackground(new java.awt.Color(255, 255, 255));
-        txtFilter4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtFilter4.setForeground(new java.awt.Color(0, 0, 0));
-        txtFilter4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(txtFilter4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 220, 40));
+        txtPrecio.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrecio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtPrecio.setForeground(new java.awt.Color(0, 0, 0));
+        txtPrecio.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 220, 40));
 
         jSeparator1.setBackground(new java.awt.Color(153, 161, 175));
         jSeparator1.setForeground(new java.awt.Color(153, 161, 175));
         jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 460, 10));
 
-        btnNew.setBackground(new java.awt.Color(0, 166, 62));
-        btnNew.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnNew.setForeground(new java.awt.Color(255, 255, 255));
-        btnNew.setText("Guardar");
-        btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
-        jPanel1.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 220, 40));
+        btnSave.setBackground(new java.awt.Color(0, 166, 62));
+        btnSave.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setText("Guardar");
+        btnSave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 220, 40));
 
-        btnLogin.setBackground(new java.awt.Color(204, 204, 204));
-        btnLogin.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(0, 0, 0));
-        btnLogin.setText("Cancelar");
-        btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 330, 230, 40));
+        btnCancel.setBackground(new java.awt.Color(204, 204, 204));
+        btnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCancel.setForeground(new java.awt.Color(0, 0, 0));
+        btnCancel.setText("Cancelar");
+        btnCancel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 330, 230, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,6 +285,15 @@ public class DialogVenta extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+         guardarVenta();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        confirmado = false;
+        dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -167,7 +325,7 @@ public class DialogVenta extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                DialogVenta dialog = new DialogVenta(new javax.swing.JFrame(), true);
+                DialogVenta dialog = new DialogVenta(new javax.swing.JFrame());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -181,9 +339,9 @@ public class DialogVenta extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Venta;
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnNew;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> cmbProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -191,8 +349,8 @@ public class DialogVenta extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField txtFilter1;
-    private javax.swing.JTextField txtFilter2;
-    private javax.swing.JTextField txtFilter4;
+    private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 }

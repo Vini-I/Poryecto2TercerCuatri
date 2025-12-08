@@ -20,11 +20,13 @@ import modelo.Cliente;
 import modelo.Producto;
 import modelo.mappers.VentaMapper;
 import modelo.mappers.DetalleVentaMapper;
-import modelo. mappers.ClienteMapper;
+import modelo.mappers.ClienteMapper;
 import modelo.mappers.ProductoMapper;
 import modelo.observer.Observable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.sql.SQLException;
 /**
  *
  * @author rodol
@@ -146,8 +148,46 @@ public class VentaServicio extends Observable<Venta>{
         
         return eliminado;
     }
+    
+    public List<VentaDTO> buscar(String criterio) throws SQLException {
+        if (criterio == null || criterio.trim().isEmpty()) {
+            return obtenerTodos();
+        }
+        
+        List<VentaDTO> todasLasVentas = ventaDAO.listarTodos();
+        List<VentaDTO> resultados = new ArrayList<>();
+        String criterioBusqueda = criterio.toLowerCase();
+        for (VentaDTO venta : todasLasVentas) {
+            boolean coincide = false;
+            
+            // Buscar por ID
+            if (String.valueOf(venta.getId()). contains(criterioBusqueda)) {
+                coincide = true;
+            }
+            
+            // Buscar por Cliente ID
+            if (String.valueOf(venta.getClienteId()).contains(criterioBusqueda)) {
+                coincide = true;
+            }
+            
+            // Buscar por Estado
+            if (venta.getEstado() != null &&
+                    venta.getEstado().toLowerCase(). contains(criterioBusqueda)) {
+                coincide = true;
+            }
+            
+            if (coincide) {
+                resultados.add(venta);
+            }
+        }
+        return resultados;
+    }
 
     public List<VentaDTO> listarTodas() {
+        return ventaDAO.listarTodos();
+    }
+    
+    public List<VentaDTO> obtenerTodos() {
         return ventaDAO.listarTodos();
     }
  

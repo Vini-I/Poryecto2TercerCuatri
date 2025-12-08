@@ -87,18 +87,23 @@ public class UsuarioServicio {
 
 
     public boolean eliminarUsuario(int id) throws LogicaNegocioException {
+         System.out.println("ID a eliminar: " + id);
         UsuarioDTO usuario = usuarioDAO.buscarPorId(id);
+            System.out.println("Usuario encontrado: " + (usuario != null ? usuario.getUsername() : "NULL"));
         if (usuario == null) {
+            System. out.println("⚠️ Usuario no existe");
             throw new LogicaNegocioException("El usuario ID " + id + " no existe");
         }
 
         Usuario usuarioActual = SessionManager.getInstance().getUsuarioActual();
+            System.out.println("Usuario actual: " + (usuarioActual != null ? usuarioActual.getUsername() : "NULL"));
         if (usuarioActual != null && usuarioActual.getId().equals(id)) {
             throw new LogicaNegocioException("No puedes eliminar tu propio usuario");
         }
 
         boolean eliminado = usuarioDAO.eliminar(id);
-
+            System.out.println("Llamando a usuarioDAO.eliminar(" + id + ")");
+    System. out.println("Resultado de DAO.eliminar(): " + eliminado);
         if (eliminado) {
             System.out.println("Usuario eliminado: " + usuario.getUsername());
         }
@@ -108,7 +113,7 @@ public class UsuarioServicio {
 
  
     public List<Usuario> listarTodos() {
-        List<UsuarioDTO> dtos = usuarioDAO.listarTodos();
+        List<UsuarioDTO> dtos = obtenerTodos();
         List<Usuario> usuarios = new ArrayList<>();
 
         for (UsuarioDTO dto : dtos) {
@@ -116,6 +121,10 @@ public class UsuarioServicio {
         }
 
         return usuarios;
+    }
+    
+    public List<UsuarioDTO> obtenerTodos() {
+        return usuarioDAO.listarTodos();
     }
 
     public List<Usuario> listarPorRol(String rol) {
@@ -128,6 +137,42 @@ public class UsuarioServicio {
 
         return usuarios;
     }
+    
+     public List<UsuarioDTO> buscar(String criterio) {
+        if (criterio == null || criterio.trim().isEmpty()) {
+            return obtenerTodos();
+        }
+
+        List<UsuarioDTO> todosLosUsuarios = usuarioDAO.listarTodos();
+        List<UsuarioDTO> resultados = new ArrayList<>();
+        String criterioBusqueda = criterio.toLowerCase();
+
+        for (UsuarioDTO usuario : todosLosUsuarios) {
+            boolean coincide = false;
+
+            if (usuario.getUsername() != null && 
+                usuario.getUsername().toLowerCase().contains(criterioBusqueda)) {
+                coincide = true;
+            }
+
+            if (usuario.getNombre() != null && 
+                usuario.getNombre().toLowerCase().contains(criterioBusqueda)) {
+                coincide = true;
+            }
+
+            if (usuario.getRol() != null && 
+                usuario.getRol().toLowerCase().contains(criterioBusqueda)) {
+                coincide = true;
+            }
+
+            if (coincide) {
+                resultados.add(usuario);
+            }
+        }
+
+        return resultados;
+    }
+    
 
     public Usuario buscarPorId(int id) throws LogicaNegocioException {
         UsuarioDTO dto = usuarioDAO.buscarPorId(id);
