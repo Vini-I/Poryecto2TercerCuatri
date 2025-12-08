@@ -4,6 +4,14 @@
  */
 package GUI;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import modelo.dtos.ProductoDTO;
+import modelo.servicios.ProductoService;
 import modelo.servicios.SessionManager;
 
 /**
@@ -11,13 +19,18 @@ import modelo.servicios.SessionManager;
  * @author llean
  */
 public class PnlProductos extends javax.swing.JPanel {
-
+    
+    private DefaultTableModel tableModel;
+    private ProductoService productoService;
+    
     /**
      * Creates new form PnlProductos
      */
     public PnlProductos() {
         initComponents();
         configurarPermisos(); //que vaya de primero porfa
+        inicializar();
+        cargarDatos();
     }
 
     private void configurarPermisos() {
@@ -27,6 +40,97 @@ public class PnlProductos extends javax.swing.JPanel {
         btnEdit.setVisible(session.tienePermiso("EDITAR_PRODUCTO"));
         btnDelete.setVisible(session.tienePermiso("ELIMINAR_PRODUCTO"));
     }
+    
+    private void inicializar() {
+        String[] columnas = {
+            "ID", "Código", "Nombre", "Categoría", "Precio", "Stock", "Proveedor ID"
+        };
+
+        tableModel = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        jTable1.setModel(tableModel);
+
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);   // ID
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(100);  // Código
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(250);  // Nombre
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(150);  // Categoría
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(80);   // Precio
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(80);   // Stock
+        jTable1.getColumnModel().getColumn(6).setPreferredWidth(100);  // Proveedor ID
+
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        productoService = new ProductoService();
+
+    }
+    
+    private void cargarDatos() {
+        try {
+            List<ProductoDTO> productos = productoService.listarTodos();
+            actualizarTabla(productos);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar productos: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void actualizarTabla(List<ProductoDTO> productos) {
+        tableModel.setRowCount(0);
+
+        for (ProductoDTO p : productos) {
+            Object[] fila = {
+                p.getIdProducto(),
+                p.getCodigo(),
+                p.getNombre(),
+                p.getCategoria(),
+                p.getPrecio(),
+                p.getStock(),
+                p.getIdProveedor()
+            };
+            tableModel.addRow(fila);
+        }
+
+        tableModel.fireTableDataChanged();
+    }
+
+    private ProductoDTO obtenerProductoDeFila(int row) {
+        ProductoDTO dto = new ProductoDTO();
+        dto.setIdProducto((Integer) tableModel.getValueAt(row, 0));
+        dto.setCodigo((String) tableModel.getValueAt(row, 1));
+        dto.setNombre((String) tableModel.getValueAt(row, 2));
+        dto.setCategoria((String) tableModel.getValueAt(row, 3));
+
+        Object precioObj = tableModel.getValueAt(row, 4);
+        if (precioObj instanceof Double) {
+            dto.setPrecio((Double) precioObj);
+        } else if (precioObj != null) {
+            dto.setPrecio(Double.parseDouble(precioObj.toString()));
+        }
+
+        Object stockObj = tableModel.getValueAt(row, 5);
+        if (stockObj instanceof Integer) {
+            dto.setStock((Integer) stockObj);
+        } else if (stockObj != null) {
+            dto.setStock(Integer.parseInt(stockObj.toString()));
+        }
+
+        Object provObj = tableModel.getValueAt(row, 6);
+        if (provObj instanceof Integer) {
+            dto.setIdProveedor((Integer) provObj);
+        } else if (provObj != null) {
+            dto.setIdProveedor(Integer.parseInt(provObj.toString()));
+        }
+
+        return dto;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -66,6 +170,11 @@ public class PnlProductos extends javax.swing.JPanel {
         txtFilter.setForeground(new java.awt.Color(0, 0, 0));
         txtFilter.setText("Buscar...");
         txtFilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 161, 175)));
+        txtFilter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtFilterKeyReleased(evt);
+            }
+        });
         jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
@@ -91,6 +200,11 @@ public class PnlProductos extends javax.swing.JPanel {
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Eliminar");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
         btnNew.setBackground(new java.awt.Color(0, 166, 62));
@@ -98,6 +212,11 @@ public class PnlProductos extends javax.swing.JPanel {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Nuevo");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
 
         btnEdit.setBackground(new java.awt.Color(21, 93, 252));
@@ -105,12 +224,109 @@ public class PnlProductos extends javax.swing.JPanel {
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Editar");
         btnEdit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
 
         add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 800));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un producto de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ProductoDTO producto = obtenerProductoDeFila(selectedRow);
+
+        java.awt.Frame parent = (java.awt.Frame) SwingUtilities.getWindowAncestor(this);
+        DialogProducto dialog = new DialogProducto(parent, true);
+        dialog.setProductoActual(producto);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
+        cargarDatos();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un producto de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de que desea eliminar el producto seleccionado?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (opcion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        ProductoDTO producto = obtenerProductoDeFila(selectedRow);
+
+        boolean ok = productoService.eliminarProducto(producto.getIdProducto());
+        if (!ok) {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo eliminar el producto.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            cargarDatos();
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void txtFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFilterKeyReleased
+        String criterio = txtFilter.getText().trim().toLowerCase();
+
+        if (criterio.isEmpty()) {
+            cargarDatos();
+            return;
+        }
+
+        try {
+            List<ProductoDTO> productos = productoService.listarTodos();
+            List<ProductoDTO> filtrados = new ArrayList<>();
+
+            for (ProductoDTO p : productos) {
+                String codigo = p.getCodigo() != null ? p.getCodigo().toLowerCase() : "";
+                String nombre = p.getNombre() != null ? p.getNombre().toLowerCase() : "";
+
+                if (codigo.contains(criterio) || nombre.contains(criterio)) {
+                    filtrados.add(p);
+                }
+            }
+
+            actualizarTabla(filtrados);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al filtrar productos: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_txtFilterKeyReleased
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        java.awt.Frame parent = (java.awt.Frame) SwingUtilities.getWindowAncestor(this);
+        DialogProducto dialog = new DialogProducto(parent, true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+        cargarDatos();
+    }//GEN-LAST:event_btnNewActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

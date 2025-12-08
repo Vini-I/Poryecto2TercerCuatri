@@ -4,17 +4,88 @@
  */
 package GUI;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import modelo.dtos.ProveedorDTO;
+import modelo.servicios.ProveedorService;
+
 /**
  *
  * @author llean
  */
 public class PnlProveedores extends javax.swing.JPanel {
+    
+    private DefaultTableModel tableModel;
+    private ProveedorService proveedorService;
 
     /**
      * Creates new form PnlProveedores
      */
     public PnlProveedores() {
         initComponents();
+        inicializar();
+        cargarDatos();
+    }
+    
+    private void inicializar() {
+        String[] columnas = {"ID", "Nombre", "Contacto", "Dirección"};
+        tableModel = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        jTable1.setModel(tableModel);
+
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);   // ID
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(200);  // Nombre
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(200);  // Contacto
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(300);  // Dirección
+
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        proveedorService = new ProveedorService();
+    }
+    
+    private void cargarDatos() {
+        try {
+            List<ProveedorDTO> proveedores = proveedorService.listarTodos();
+            actualizarTabla(proveedores);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar proveedores: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void actualizarTabla(List<ProveedorDTO> proveedores) {
+        tableModel.setRowCount(0);
+
+        for (ProveedorDTO p : proveedores) {
+            Object[] fila = {
+                p.getIdProveedor(),
+                p.getNombre(),
+                p.getContacto(),
+                p.getDireccion()
+            };
+            tableModel.addRow(fila);
+        }
+
+        tableModel.fireTableDataChanged();
+    }
+    
+    private ProveedorDTO obtenerProveedorDeFila(int row) {
+        ProveedorDTO dto = new ProveedorDTO();
+        dto.setIdProveedor((Integer) tableModel.getValueAt(row, 0));
+        dto.setNombre((String) tableModel.getValueAt(row, 1));
+        dto.setContacto((String) tableModel.getValueAt(row, 2));
+        dto.setDireccion((String) tableModel.getValueAt(row, 3));
+        return dto;
     }
 
     /**
@@ -68,6 +139,11 @@ public class PnlProveedores extends javax.swing.JPanel {
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Eliminar");
         btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
@@ -93,6 +169,11 @@ public class PnlProveedores extends javax.swing.JPanel {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Nuevo");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
 
         btnEdit.setBackground(new java.awt.Color(21, 93, 252));
@@ -100,6 +181,11 @@ public class PnlProveedores extends javax.swing.JPanel {
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Editar");
         btnEdit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
@@ -108,8 +194,96 @@ public class PnlProveedores extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFilterActionPerformed
-        // TODO add your handling code here:
+        String criterio = txtFilter.getText().trim().toLowerCase();
+
+        if (criterio.isEmpty()) {
+            cargarDatos();
+            return;
+        }
+
+        try {
+            List<ProveedorDTO> proveedores = proveedorService.listarTodos();
+            List<ProveedorDTO> filtrados = new ArrayList<>();
+
+            for (ProveedorDTO p : proveedores) {
+                String nombre = p.getNombre() != null ? p.getNombre().toLowerCase() : "";
+                String contacto = p.getContacto() != null ? p.getContacto().toLowerCase() : "";
+
+                if (nombre.contains(criterio) || contacto.contains(criterio)) {
+                    filtrados.add(p);
+                }
+            }
+
+            actualizarTabla(filtrados);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar proveedores: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_txtFilterActionPerformed
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        java.awt.Frame parent = (java.awt.Frame) SwingUtilities.getWindowAncestor(this);
+        DialogProveedor dialog = new DialogProveedor(parent, true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+        cargarDatos();
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un proveedor de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ProveedorDTO proveedor = obtenerProveedorDeFila(selectedRow);
+
+        java.awt.Frame parent = (java.awt.Frame) SwingUtilities.getWindowAncestor(this);
+        DialogProveedor dialog = new DialogProveedor(parent, true);
+        dialog.setProveedorActual(proveedor);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
+        cargarDatos();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un proveedor de la tabla",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de que desea eliminar el proveedor seleccionado?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (opcion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        ProveedorDTO proveedor = obtenerProveedorDeFila(selectedRow);
+
+        boolean ok = proveedorService.eliminarProveedor(proveedor.getIdProveedor());
+        if (!ok) {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo eliminar el proveedor.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            cargarDatos();
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
