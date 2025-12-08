@@ -18,14 +18,12 @@ public class ClienteController {
 
     // Crear cliente (sin numeroCompras)
     public boolean crearCliente(ClienteDTO dto) {
-        Cliente cliente = ClienteMapper.toEntity(dto);
-        return clienteDao.insertar(cliente);
+        return clienteDao.insertar(dto);
     }
 
     // Actualizar cliente
     public boolean actualizarCliente(ClienteDTO dto) {
-        Cliente cliente = ClienteMapper.toEntity(dto);
-        return clienteDao.actualizar(cliente);
+        return clienteDao.actualizar(dto);
     }
 
     // Eliminar cliente por id
@@ -35,29 +33,20 @@ public class ClienteController {
 
     // Obtener cliente por id (numeroCompras se deja en 0 por ahora)
     public ClienteDTO obtenerClientePorId(int id) {
-        Cliente cliente = clienteDao.buscarPorId(id);
+        ClienteDTO cliente = clienteDao.buscarPorId(id);
         if (cliente == null) {
             return null;
         }
-        return ClienteMapper.toDto(cliente);
-    }
-
-    // Buscar cliente por cédula
-    public ClienteDTO buscarPorCedula(String cedula) {
-        Cliente cliente = clienteDao.buscarPorCedula(cedula);
-        if (cliente == null) {
-            return null;
-        }
-        return ClienteMapper.toDto(cliente);
+        return cliente;
     }
 
     // Buscar clientes por nombre
     public List<ClienteDTO> buscarPorNombre(String nombre) {
-        List<Cliente> clientes = clienteDao.buscarPorNombre(nombre);
+        List<ClienteDTO> clientes = clienteDao.buscarPorNombre(nombre);
         List<ClienteDTO> dtos = new ArrayList<>();
 
-        for (Cliente c : clientes) {
-            dtos.add(ClienteMapper.toDto(c));
+        for (ClienteDTO c : clientes) {
+            dtos.add(c);
         }
 
         return dtos;
@@ -65,11 +54,11 @@ public class ClienteController {
 
     // Listar todos los clientes
     public List<ClienteDTO> listarTodos() {
-        List<Cliente> clientes = clienteDao.listarTodos();
+        List<ClienteDTO> clientes = clienteDao.listarTodos();
         List<ClienteDTO> dtos = new ArrayList<>();
 
-        for (Cliente c : clientes) {
-            dtos.add(ClienteMapper.toDto(c));
+        for (ClienteDTO c : clientes) {
+            dtos.add(c);
         }
 
         return dtos;

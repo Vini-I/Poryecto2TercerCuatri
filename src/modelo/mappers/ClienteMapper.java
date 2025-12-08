@@ -15,7 +15,7 @@ public class ClienteMapper {
         }
 
         ClienteDTO dto = new ClienteDTO();
-        dto.setCedula(Integer.toString(cliente.getCedula()));
+        dto.setCedula(cliente.getCedula());
         dto.setNombreCompleto(cliente.getNombreCompleto());
         dto.setDireccion(cliente.getDireccion());
         dto.setTelefono(cliente.getTelefono());
@@ -30,7 +30,7 @@ public class ClienteMapper {
         }
 
         Cliente cliente = new Cliente();
-        cliente.setCedula(Integer.parseInt(dto.getCedula()));
+        cliente.setCedula(dto.getCedula());
         cliente.setNombreCompleto(dto.getNombreCompleto());
         cliente.setDireccion(dto.getDireccion());
         cliente.setTelefono(dto.getTelefono());
@@ -38,4 +38,3 @@ public class ClienteMapper {
         return cliente;
     }
 }
-
