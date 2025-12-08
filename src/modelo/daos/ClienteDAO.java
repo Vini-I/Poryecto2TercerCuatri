@@ -123,11 +123,6 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public ClienteDTO buscarPorCedula(String cedula) {
-        return null;
-    }
-
-    @Override
     public List<ClienteDTO> buscarPorNombre(String nombre) {
         String sql = "SELECT cedula, nombre, direccion, telefono, correo " +
                 "FROM clientes WHERE nombre LIKE ?";
