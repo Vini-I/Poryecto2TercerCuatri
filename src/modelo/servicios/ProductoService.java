@@ -84,15 +84,14 @@ public class ProductoService {
             return errores;
         }
 
-        Producto entity = ProductoMapper.toEntity(dto);
-        boolean ok = productoDao.insertar(ProductoMapper.toDto(entity));
+        boolean ok = productoDao.insertar(dto);
 
         if (!ok) {
             errores.add("Error al guardar el producto en la base de datos.");
             return errores;
         }
 
-        dto.setIdProducto(entity.getIdProducto());
+        dto.setIdProducto(dto.getIdProducto());
         return errores;
     }
 
@@ -102,8 +101,7 @@ public class ProductoService {
             return errores;
         }
 
-        Producto entity = ProductoMapper.toEntity(dto);
-        boolean ok = productoDao.actualizar(ProductoMapper.toDto(entity));
+        boolean ok = productoDao.actualizar(dto);
 
         if (!ok) {
             errores.add("Error al actualizar el producto en la base de datos.");
