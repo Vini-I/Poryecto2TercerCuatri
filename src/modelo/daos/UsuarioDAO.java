@@ -196,13 +196,14 @@ public class UsuarioDAO implements IUsuarioDao {
 
     @Override
     public boolean eliminar(int id) {
+        System.out.println("ID recibido: " + id);
         try (Connection conn = ConexionBD.getInstance().getConnection();
-             CallableStatement cs = conn.prepareCall("CALL eliminar_usuario(?)")) {
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM usuarios WHERE id = ?")) {
             
-            cs.setInt(1, id);
-            
-            int filasAfectadas = cs.executeUpdate();
-            
+            ps.setInt(1, id);
+                System.out.println("PreparedStatement creado con ID: " + id);
+            int filasAfectadas = ps.executeUpdate();
+             System.out.println("Filas afectadas: " + filasAfectadas);
             if (filasAfectadas > 0) {
                 System.out.println("Usuario eliminado: ID " + id);
                 return true;
@@ -212,6 +213,9 @@ public class UsuarioDAO implements IUsuarioDao {
             
         } catch (SQLException ex) {
             System.out.println("Error " + ex);
+              System.err.println("Mensaje: " + ex.getMessage());
+        System.err.println("Código SQL: " + ex.getErrorCode());
+        System.err. println("SQLState: " + ex.getSQLState());
         }
         
         return false;

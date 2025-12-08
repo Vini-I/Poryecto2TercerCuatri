@@ -4,8 +4,8 @@
  */
 package Controladores;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -20,9 +20,9 @@ public abstract class BaseControlador<V>{
     }
     
     public void mostrarError(String mensaje) {
-        if (vista instanceof JFrame) {
+        if (vista instanceof JPanel) {
             JOptionPane.showMessageDialog(
-                (JFrame) vista,
+                (JPanel) vista,
                 mensaje,
                 "Error",
                 JOptionPane.ERROR_MESSAGE
@@ -31,9 +31,9 @@ public abstract class BaseControlador<V>{
     }
  
     public void mostrarMensaje(String mensaje, String titulo) {
-        if (vista instanceof JFrame) {
+        if (vista instanceof JPanel) {
             JOptionPane.showMessageDialog(
-                (JFrame) vista,
+                (JPanel) vista,
                 mensaje,
                 titulo,
                 JOptionPane.INFORMATION_MESSAGE
@@ -42,9 +42,9 @@ public abstract class BaseControlador<V>{
     }
 
     public boolean confirmar(String mensaje, String titulo) {
-        if (vista instanceof JFrame) {
+        if (vista instanceof JPanel) {
             int result = JOptionPane.showConfirmDialog(
-                (JFrame) vista,
+                (JPanel) vista,
                 mensaje,
                 titulo,
                 JOptionPane. YES_NO_OPTION,
