@@ -1,91 +1,83 @@
 package controladores;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import Controladores.BaseControlador;
 import modelo.Producto;
 import modelo.Proveedor;
 import modelo.daos.IProductoDAO;
 import modelo.daos.IProveedorDAO;
-import modelo.daos.IProveedorDAO;
 import modelo.dtos.ProductoDTO;
+import modelo.dtos.ProveedorDTO;
 import modelo.mappers.ProductoMapper;
+import modelo.servicios.ProductoService;
 
-public class ProductoController {
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductoController extends BaseControlador {
 
     private final IProductoDAO productoDao;
     private final IProveedorDAO proveedorDao;
+    private final ProductoService productoService;
 
-    public ProductoController(IProductoDAO productoDao, IProveedorDAO proveedorDao) {
+    public ProductoController(JPanel vista, IProductoDAO productoDao, IProveedorDAO proveedorDao) {
+        super(vista);
         this.productoDao = productoDao;
         this.proveedorDao = proveedorDao;
+        this.productoService = new ProductoService(productoDao, proveedorDao);
     }
 
-    // Crear producto desde DTO
-    public boolean crearProducto(ProductoDTO dto) {
-        return productoDao.insertar(dto);
+    public List<String> crearProducto(ProductoDTO dto) {
+        return productoService.crearProducto(dto);
     }
 
-    // Actualizar producto existente
-    public boolean actualizarProducto(ProductoDTO dto) {
-        return productoDao.actualizar(dto);
+    public List<String> actualizarProducto(ProductoDTO dto) {
+        return productoService.actualizarProducto(dto);
     }
 
-    // Eliminar producto por id
     public boolean eliminarProducto(int id) {
         return productoDao.eliminar(id);
     }
 
-    // Obtener un producto por id y devolver DTO con nombre de proveedor y agotado
     public ProductoDTO obtenerProductoPorId(int id) {
-        ProductoDTO producto = productoDao.buscarPorId(id);
-        if (producto == null) {
-            return null;
-        }
+        ProductoDTO p = productoDao.buscarPorId(id);
+        if (p == null) return null;
 
-        return producto;
+        return p;
     }
 
-    // Listar todos los productos
-    public List<ProductoDTO> listarTodos() {
-        List<ProductoDTO> dtos = productoDao.listarTodos();
-
-        return dtos;
-    }
-
-    // Listar productos por categoría
-    public List<ProductoDTO> listarPorCategoria(String categoria) {
-        List<ProductoDTO> dtos = productoDao.buscarPorCategoria(categoria);
-
-        return dtos;
-    }
-
-    // Buscar por código
     public ProductoDTO buscarPorCodigo(String codigo) {
-        ProductoDTO producto = productoDao.buscarPorCodigo(codigo);
-        if (producto == null) {
-            return null;
-        }
+        ProductoDTO p = productoDao.buscarPorCodigo(codigo);
+        if (p == null) return null;
 
-        return producto;
+        return p;
     }
 
-    // Listar productos agotados
+    public List<ProductoDTO> listarTodos() {
+        List<ProductoDTO> productos = productoDao.listarTodos();
+
+        return productos;
+    }
+
+    public List<ProductoDTO> listarPorCategoria(String categoria) {
+        List<ProductoDTO> productos = productoDao.buscarPorCategoria(categoria);
+
+        return productos;
+    }
+
     public List<ProductoDTO> listarAgotados() {
-        List<ProductoDTO> dtos = productoDao.listarAgotados();
+        List<ProductoDTO> productos = productoDao.listarAgotados();
 
-        return dtos;
+        return productos;
     }
 
-    // Listar productos con stock bajo
     public List<ProductoDTO> listarStockBajo(int umbral) {
-        List<ProductoDTO> dtos = productoDao.listarStockBajo(umbral);
+        List<ProductoDTO> productos = productoDao.listarStockBajo(umbral);
 
-        return dtos;
+        return productos;
     }
 
-    // Valor total del inventario
-    public double obtenerValorTotalInventario() {
+    public double valorTotalInventario() {
         return productoDao.calcularValorTotalInventario();
     }
 }
