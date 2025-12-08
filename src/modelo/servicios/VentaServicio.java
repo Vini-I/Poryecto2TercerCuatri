@@ -33,16 +33,24 @@ import java.sql.SQLException;
  */
 public class VentaServicio extends Observable<Venta>{
     
+    private static VentaServicio instance;
     private VentaDAO ventaDAO;
     private DetalleVentaDAO detalleDAO;
     private ProductoDAO productoDAO;
     private ClienteDAO clienteDAO;
     
-    public VentaServicio() {
+    private VentaServicio() {
         this.ventaDAO = new VentaDAO();
         this.detalleDAO = new DetalleVentaDAO();
         this.productoDAO = new ProductoDAO();
         this.clienteDAO = new ClienteDAO();
+    }
+    
+    public static VentaServicio getInstance(){
+        if(instance == null){
+            instance = new VentaServicio();
+        }
+        return instance;
     }
     
     public Venta registrarVenta(Integer cedula, List<DetalleVenta> detalles) 

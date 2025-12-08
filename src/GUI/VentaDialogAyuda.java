@@ -23,7 +23,7 @@ public class VentaDialogAyuda {
     
     public VentaDialogAyuda(DialogVenta dialog) {
         this.dialog = dialog;
-        this.ventaServicio = new VentaServicio();
+        this.ventaServicio = VentaServicio.getInstance();
         this.productoServicio = new ProductoDAO();
     }
     

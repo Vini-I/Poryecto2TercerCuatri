@@ -9,15 +9,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import modelo.dtos.VentaDTO;
+import modelo.observer.IObserver;
 import modelo.servicios.VentaServicio;
 
 /**
  *
  * @author llean
  */
-public class PnlFacturas extends javax.swing.JPanel {
+public class PnlFacturas extends javax.swing.JPanel implements IObserver<VentaDTO>{
     private DefaultTableModel tableModel;
     private FacturaControlador controlador;
     private VentaServicio ventaServicio;
@@ -29,6 +31,7 @@ public class PnlFacturas extends javax.swing.JPanel {
         initComponents();
         inicializar();
         cargarDatos();
+        
     }
     
      private void inicializar() {
@@ -50,10 +53,10 @@ public class PnlFacturas extends javax.swing.JPanel {
         tablaVentas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         controlador = new FacturaControlador(this);
-        ventaServicio = new VentaServicio();
+        ventaServicio = VentaServicio.getInstance();
     }
     
-    private void cargarDatos() {
+    public void cargarDatos() {
         try {
             List<VentaDTO> ventas = ventaServicio.obtenerTodos();
             actualizarTabla(ventas);
@@ -236,4 +239,30 @@ public class PnlFacturas extends javax.swing.JPanel {
     private javax.swing.JScrollPane table;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void Agregar(VentaDTO t) {
+        SwingUtilities.invokeLater(() -> {
+            cargarDatos();
+        });
+    }
+
+    @Override
+    public void Actualizar(VentaDTO t) {
+        SwingUtilities.invokeLater(() -> {
+            cargarDatos();
+        });
+    }
+
+    @Override
+    public void Eliminar(int id) {
+        SwingUtilities.invokeLater(() -> {
+            cargarDatos();
+        });
+    }
+
+    @Override
+    public void Cambio() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

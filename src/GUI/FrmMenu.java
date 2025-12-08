@@ -17,6 +17,13 @@ public class FrmMenu extends javax.swing.JFrame {
     private MenuGuia controlador;
     private CardLayout cardlayout;
     private SessionManager session;
+    
+    private PnlProductos pnlProductos;
+    private PnlProveedores pnlProveedores;
+    private PnlClientes pnlClientes;
+    private PnlVentas pnlVentas;
+    private PnlUsuarios pnlUsuarios;
+    private PnlFacturas pnlFacturas;
     /**
      * Creates new form FrmProductos
      */
@@ -33,14 +40,32 @@ public class FrmMenu extends javax.swing.JFrame {
     }
     
      private void agregarPaneles() {
-        panelContenido.add(new PnlProductos(), "PRODUCTOS");
-        panelContenido.add(new PnlProveedores(), "PROVEEDORES");
-        panelContenido.add(new PnlClientes(), "CLIENTES");
-        panelContenido.add(new PnlVentas(), "VENTAS");
-        panelContenido.add(new PnlUsuarios(), "USUARIOS");
-        panelContenido.add(new PnlFacturas(), "FACTURAS");
+
+        pnlProductos = new PnlProductos();
+        pnlProveedores = new PnlProveedores();
+        pnlClientes = new PnlClientes();
+        pnlVentas = new PnlVentas();
+        pnlUsuarios = new PnlUsuarios();
+        pnlFacturas = new PnlFacturas();
+
+        panelContenido.add(pnlProductos, "PRODUCTOS");
+        panelContenido.add(pnlProveedores, "PROVEEDORES");
+        panelContenido.add(pnlClientes, "CLIENTES");
+        panelContenido.add(pnlVentas, "VENTAS");
+        panelContenido.add(pnlUsuarios, "USUARIOS");
+        panelContenido.add(pnlFacturas, "FACTURAS");
+
     }
-    
+
+    public PnlVentas getPnlVentas() {
+        return pnlVentas;
+    }
+
+    public PnlFacturas getPnlFacturas() {
+        return pnlFacturas;
+    }
+
+
     public void mostrarProductos() {
         cardlayout.show(panelContenido, "PRODUCTOS");
         marcarBotonActivo(btnProductos);
@@ -69,6 +94,7 @@ public class FrmMenu extends javax.swing.JFrame {
     public void mostrarFacturas() {
         cardlayout.show(panelContenido, "FACTURAS");
         marcarBotonActivo(btnFacturas);
+        pnlFacturas.cargarDatos();
     }
     
     private void configurarPermisos() {

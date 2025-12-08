@@ -47,7 +47,7 @@ public class PnlVentas extends javax.swing.JPanel {
         tablaVentas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         controlador = new VentaControlador(this);
-        ventaServicio = new VentaServicio();
+        ventaServicio = VentaServicio.getInstance();
     }
     
     private void cargarDatos() {

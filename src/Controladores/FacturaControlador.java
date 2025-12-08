@@ -23,7 +23,7 @@ public class FacturaControlador extends BaseControlador<PnlFacturas> {
     
     public FacturaControlador(PnlFacturas vista) {
         super(vista);
-        this.ventaServicio = new VentaServicio();
+        this.ventaServicio = VentaServicio.getInstance();
         this.facturaServicio = new FacturaServicio();
     }
     

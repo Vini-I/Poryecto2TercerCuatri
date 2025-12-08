@@ -18,7 +18,7 @@ public class VentaControlador extends BaseControlador<PnlVentas> {
     
     public VentaControlador(PnlVentas vista) {
         super(vista);
-        this.ventaServicio = new VentaServicio();
+        this.ventaServicio = VentaServicio.getInstance();
     }
     public void cargarVentas() {
         try {
