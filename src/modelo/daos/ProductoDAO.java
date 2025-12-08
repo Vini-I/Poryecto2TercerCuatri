@@ -2,6 +2,7 @@ package modelo.daos;
 
 import bd.ConexionBD;
 import modelo.Producto;
+import modelo.dtos.ProductoDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public boolean insertar(Producto producto) {
+    public boolean insertar(ProductoDTO producto) {
         String sql = "INSERT INTO productos " +
                 "(codigo, nombre, categoria, precio, cantidad, proveedor_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
@@ -48,7 +49,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public Producto buscarPorId(int id) {
+    public ProductoDTO buscarPorId(int id) {
         String sql = "SELECT id, codigo, nombre, categoria, precio, cantidad, proveedor_id " +
                 "FROM productos WHERE id = ?";
 
@@ -71,7 +72,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public boolean actualizar(Producto producto) {
+    public boolean actualizar(ProductoDTO producto) {
         String sql = "UPDATE productos SET " +
                 "codigo = ?, nombre = ?, categoria = ?, precio = ?, " +
                 "cantidad = ?, proveedor_id = ? " +
@@ -113,11 +114,11 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public List<Producto> listarTodos() {
+    public List<ProductoDTO> listarTodos() {
         String sql = "SELECT id, codigo, nombre, categoria, precio, cantidad, proveedor_id " +
                 "FROM productos";
 
-        List<Producto> lista = new ArrayList<>();
+        List<ProductoDTO> lista = new ArrayList<>();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -135,7 +136,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public Producto buscarPorCodigo(String codigo) {
+    public ProductoDTO buscarPorCodigo(String codigo) {
         String sql = "SELECT id, codigo, nombre, categoria, precio, cantidad, proveedor_id " +
                 "FROM productos WHERE codigo = ?";
 
@@ -158,11 +159,11 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public List<Producto> buscarPorCategoria(String categoria) {
+    public List<ProductoDTO> buscarPorCategoria(String categoria) {
         String sql = "SELECT id, codigo, nombre, categoria, precio, cantidad, proveedor_id " +
                 "FROM productos WHERE categoria = ?";
 
-        List<Producto> lista = new ArrayList<>();
+        List<ProductoDTO> lista = new ArrayList<>();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -183,11 +184,11 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public List<Producto> listarAgotados() {
+    public List<ProductoDTO> listarAgotados() {
         String sql = "SELECT id, codigo, nombre, categoria, precio, cantidad, proveedor_id " +
                 "FROM productos WHERE cantidad = 0";
 
-        List<Producto> lista = new ArrayList<>();
+        List<ProductoDTO> lista = new ArrayList<>();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -205,11 +206,11 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public List<Producto> listarStockBajo(int umbral) {
+    public List<ProductoDTO> listarStockBajo(int umbral) {
         String sql = "SELECT id, codigo, nombre, categoria, precio, cantidad, proveedor_id " +
                 "FROM productos WHERE cantidad <= ?";
 
-        List<Producto> lista = new ArrayList<>();
+        List<ProductoDTO> lista = new ArrayList<>();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -248,8 +249,8 @@ public class ProductoDAO implements IProductoDAO {
         return 0.0;
     }
 
-    private Producto mapearProducto(ResultSet rs) throws SQLException {
-        Producto p = new Producto();
+    private ProductoDTO mapearProducto(ResultSet rs) throws SQLException {
+        ProductoDTO p = new ProductoDTO();
         p.setIdProducto(rs.getInt("id"));
         p.setCodigo(rs.getString("codigo"));
         p.setNombre(rs.getString("nombre"));
