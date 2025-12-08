@@ -4,18 +4,37 @@
  */
 package GUI;
 
+
+import controladores.ProductoController;
+import controladores.ProveedorController;
+import java.util.List;
+import javax.swing.JOptionPane;
+import modelo.dtos.ProductoDTO;
+import modelo.dtos.ProveedorDTO;
+
 /**
  *
  * @author llean
  */
 public class DialogProducto extends javax.swing.JDialog {
+    
+    private ProductoController productoController;
+    private ProductoDTO productoActual;
+    private ProveedorController proveedorController;
 
     /**
      * Creates new form DialogProducto
      */
     public DialogProducto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.productoController = new ProductoController(this);
+        this.proveedorController = new ProveedorController(this);
         initComponents();
+        cargarProveedoresEnCombo();
+        
+        if (this.proveedorController != null) {
+            cargarProveedoresEnCombo();
+        }
     }
 
     /**
@@ -138,6 +157,11 @@ public class DialogProducto extends javax.swing.JDialog {
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setText("Guardar");
         btnNew.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 220, 40));
 
         btnLogin.setBackground(new java.awt.Color(204, 204, 204));
@@ -145,12 +169,170 @@ public class DialogProducto extends javax.swing.JDialog {
         btnLogin.setForeground(new java.awt.Color(0, 0, 0));
         btnLogin.setText("Cancelar");
         btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 370, 230, 40));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 420));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private ProductoDTO construirDto() {
+        ProductoDTO dto = new ProductoDTO();
+
+        if (productoActual != null) {
+            dto.setIdProducto(productoActual.getIdProducto());
+        }
+
+        dto.setCodigo(txtFilter1.getText().trim());
+        dto.setNombre(txtFilter3.getText().trim());
+
+        String categoria = (String) jComboBox2.getSelectedItem();
+        dto.setCategoria(categoria);
+
+        int proveedorId = obtenerProvId();
+        dto.setIdProveedor(proveedorId);
+
+        String precioTexto = txtFilter4.getText().trim();
+        if (!precioTexto.isEmpty()) {
+            dto.setPrecio(Double.parseDouble(precioTexto));
+        } else {
+            dto.setPrecio(0.0);
+        }
+
+        String cantidadTexto = txtFilter2.getText().trim();
+        if (!cantidadTexto.isEmpty()) {
+            dto.setStock(Integer.parseInt(cantidadTexto));
+        } else {
+            dto.setStock(0);
+        }
+
+        return dto;
+    }
+    
+    private int obtenerProvId() {
+        String nombreProveedor = (String) jComboBox1.getSelectedItem();
+            if (nombreProveedor == null) return -1;
+
+            List<ProveedorDTO> coincidencias = proveedorController.buscarPorNombre(nombreProveedor);
+
+            if (coincidencias.isEmpty()) {
+                return -1;
+            }
+
+            return coincidencias.get(0).getIdProveedor();
+    }
+    
+    public void setProductoActual(ProductoDTO producto) {
+    this.productoActual = producto;
+    if (productoActual == null) {
+        return;
+    }
+
+    // Código
+    txtFilter1.setText(productoActual.getCodigo());
+
+    // Nombre
+    txtFilter3.setText(productoActual.getNombre());
+
+    // Categoría (combo jComboBox2)
+    if (productoActual.getCategoria() != null) {
+        jComboBox2.setSelectedItem(productoActual.getCategoria());
+    }
+
+    // Precio
+    txtFilter4.setText(String.valueOf(productoActual.getPrecio()));
+
+    // Cantidad / stock
+    txtFilter2.setText(String.valueOf(productoActual.getStock()));
+
+    // Proveedor: asegurar que el combo esté cargado y seleccionar el proveedor
+    cargarProveedoresEnCombo();
+    cargarComboBoxProveedorDeProducto();
+}
+    
+    private void mostrarErrores(List<String> errores) {
+        StringBuilder sb = new StringBuilder("Se encontraron los siguientes errores:\n\n");
+        for (String e : errores) {
+            sb.append("• ").append(e).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(),
+                "Errores de validación", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    private void cargarProveedoresEnCombo() {
+        jComboBox1.removeAllItems();
+
+        List<ProveedorDTO> proveedores = proveedorController.listarTodos();
+
+        for (ProveedorDTO p : proveedores) {
+            jComboBox1.addItem(p.getNombre());
+        }
+    }
+    
+    private void cargarComboBoxProveedorDeProducto() {
+        if (productoActual == null) return;
+
+        int provId = productoActual.getIdProveedor();
+        ProveedorDTO prov = proveedorController.obtenerProveedorPorId(provId);
+
+        if (prov == null) return;
+
+        String nombre = prov.getNombre();
+
+        // Find the name in the comboBox and select it
+        for (int i = 0; i < jComboBox1.getItemCount(); i++) {
+            if (jComboBox1.getItemAt(i).equals(nombre)) {
+                jComboBox1.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        try {
+            ProductoDTO dto = construirDto();
+            java.util.List<String> errores;
+
+            if (productoActual == null) {
+                errores = productoController.crearProducto(dto);
+            } else {
+                errores = productoController.actualizarProducto(dto);
+            }
+
+            if (!errores.isEmpty()) {
+                mostrarErrores(errores);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "Producto guardado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            dispose();
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Precio y cantidad deben ser numéricos.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Ocurrió un error al guardar el producto.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments

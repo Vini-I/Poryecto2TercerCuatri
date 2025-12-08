@@ -1,30 +1,19 @@
 package controladores;
 
 import Controladores.BaseControlador;
-import modelo.Producto;
-import modelo.Proveedor;
-import modelo.daos.IProductoDAO;
-import modelo.daos.IProveedorDAO;
 import modelo.dtos.ProductoDTO;
-import modelo.dtos.ProveedorDTO;
-import modelo.mappers.ProductoMapper;
 import modelo.servicios.ProductoService;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductoController extends BaseControlador {
 
-    private final IProductoDAO productoDao;
-    private final IProveedorDAO proveedorDao;
     private final ProductoService productoService;
 
-    public ProductoController(JPanel vista, IProductoDAO productoDao, IProveedorDAO proveedorDao) {
+    public ProductoController(JDialog vista) {
         super(vista);
-        this.productoDao = productoDao;
-        this.proveedorDao = proveedorDao;
-        this.productoService = new ProductoService(productoDao, proveedorDao);
+        this.productoService = new ProductoService();
     }
 
     public List<String> crearProducto(ProductoDTO dto) {
@@ -35,49 +24,39 @@ public class ProductoController extends BaseControlador {
         return productoService.actualizarProducto(dto);
     }
 
+    public List<String> eliminarProducto(ProductoDTO dto) {
+        return productoService.eliminarProducto(dto);
+    }
+
     public boolean eliminarProducto(int id) {
-        return productoDao.eliminar(id);
+        return productoService.eliminarProducto(id);
     }
 
     public ProductoDTO obtenerProductoPorId(int id) {
-        ProductoDTO p = productoDao.buscarPorId(id);
-        if (p == null) return null;
-
-        return p;
+        return productoService.obtenerProductoPorId(id);
     }
 
     public ProductoDTO buscarPorCodigo(String codigo) {
-        ProductoDTO p = productoDao.buscarPorCodigo(codigo);
-        if (p == null) return null;
-
-        return p;
+        return productoService.buscarPorCodigo(codigo);
     }
 
     public List<ProductoDTO> listarTodos() {
-        List<ProductoDTO> productos = productoDao.listarTodos();
-
-        return productos;
+        return productoService.listarTodos();
     }
 
     public List<ProductoDTO> listarPorCategoria(String categoria) {
-        List<ProductoDTO> productos = productoDao.buscarPorCategoria(categoria);
-
-        return productos;
+        return productoService.listarPorCategoria(categoria);
     }
 
     public List<ProductoDTO> listarAgotados() {
-        List<ProductoDTO> productos = productoDao.listarAgotados();
-
-        return productos;
+        return productoService.listarAgotados();
     }
 
     public List<ProductoDTO> listarStockBajo(int umbral) {
-        List<ProductoDTO> productos = productoDao.listarStockBajo(umbral);
-
-        return productos;
+        return productoService.listarStockBajo(umbral);
     }
 
     public double valorTotalInventario() {
-        return productoDao.calcularValorTotalInventario();
+        return productoService.valorTotalInventario();
     }
 }
