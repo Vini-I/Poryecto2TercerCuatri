@@ -1,12 +1,12 @@
 package modelo.daos;
 
-import modelo.Cliente;
+import modelo.dtos.ClienteDTO;
 
 import java.util.List;
 
-public interface IClienteDAO extends IDao<Cliente> {
+public interface IClienteDAO extends IDao<ClienteDTO> {
 
-    Cliente buscarPorCedula(String cedula);
+    ClienteDTO buscarPorCedula(String cedula);
 
-    List<Cliente> buscarPorNombre(String nombre);
+    List<ClienteDTO> buscarPorNombre(String nombre);
 }
