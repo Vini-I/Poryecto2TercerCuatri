@@ -4,17 +4,22 @@
  */
 package GUI;
 
+import Controladores.LoginControlador;
+import javax.swing.JFrame;
+
 /**
  *
  * @author llean
  */
 public class FrmLogin extends javax.swing.JFrame {
-
+    private LoginControlador controlador;
     /**
      * Creates new form FrmLogin
      */
     public FrmLogin() {
         initComponents();
+        controlador = new LoginControlador(this);
+        configurarVentana();
     }
 
     /**
@@ -64,6 +69,11 @@ public class FrmLogin extends javax.swing.JFrame {
         btnRegister.setForeground(new java.awt.Color(0, 0, 0));
         btnRegister.setText("Registrarse");
         btnRegister.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 330, 250, 40));
 
         txtUser.setBackground(new java.awt.Color(255, 255, 255));
@@ -71,6 +81,11 @@ public class FrmLogin extends javax.swing.JFrame {
         txtUser.setForeground(new java.awt.Color(0, 0, 0));
         txtUser.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         txtUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txtUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUserActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 340, 50));
 
         btnLogin.setBackground(new java.awt.Color(21, 93, 252));
@@ -78,6 +93,11 @@ public class FrmLogin extends javax.swing.JFrame {
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Iniciar Sesion");
         btnLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(21, 93, 252)));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 290, 40));
 
         lblPassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -96,6 +116,11 @@ public class FrmLogin extends javax.swing.JFrame {
         txtPassword.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         txtPassword.setToolTipText("");
         txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 340, 50));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 190, -1, -1));
@@ -105,6 +130,41 @@ public class FrmLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+       iniciarSesion();
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        controlador.abrirRegistro();
+    }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void configurarVentana() {
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        txtUser.requestFocus();
+    }
+    
+    private void iniciarSesion() {
+        String username = txtUser.getText();
+        String password = new String(txtPassword.getPassword());
+
+        controlador.iniciarSesion(username, password);
+    }
+    
+    public void limpiarCampos() {
+        txtUser.setText("");
+        txtPassword.setText("");
+        txtUser.requestFocus();
+    }
+    
     /**
      * @param args the command line arguments
      */

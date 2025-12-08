@@ -50,7 +50,7 @@ public class DetalleVenta {
         return producto != null ? producto.getNombre() : "Producto no asignado";
     }
 
-    public Integer getCodigoProducto() {
+    public String getCodigoProducto() {
         return producto != null ? producto.getCodigo() : null;
     }
 

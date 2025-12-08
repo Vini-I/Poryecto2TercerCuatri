@@ -67,19 +67,6 @@ public class Venta {
         this.detalles.clear();
     }
 
-    public double calcularSubtotal() {
-        return detalles.stream().mapToDouble(DetalleVenta::calcularSubtotal)
-                .sum();
-    }
-
-    public double calcularImpuesto() {
-        return calcularSubtotal() * 0.18;
-    }
-
-    public double calcularTotal() {
-        return calcularSubtotal() + calcularImpuesto();
-    }
-
 public int obtenerCantidadTotalProductos() {
         return detalles.stream()
                 .mapToInt(DetalleVenta::getCantidad)
@@ -152,8 +139,7 @@ public int obtenerCantidadTotalProductos() {
         return String.format("Venta{id=%d, cliente='%s', fecha=%s, estado=%s, " +
                            "detalles=%d, subtotal=%.2f, impuesto=%.2f, total=%.2f}",
                 id, getNombreCliente(), getFechaFormateada(), estado,
-                obtenerCantidadLineas(), calcularSubtotal(), 
-                calcularImpuesto(), calcularTotal());
+                obtenerCantidadLineas());
     }
 
     @Override

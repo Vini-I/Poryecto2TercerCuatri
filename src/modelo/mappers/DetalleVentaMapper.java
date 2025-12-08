@@ -4,10 +4,10 @@
  */
 package modelo.mappers;
 
-import modelo.Cliente;
-import modelo.EstadoVentaEnum;
+import modelo.DetalleVenta;
+import modelo.Producto;
 import modelo.Venta;
-import modelo.dtos.VentaDTO;
+import modelo.dtos.DetalleVentaDTO;
 
 /**
  *
@@ -15,29 +15,31 @@ import modelo.dtos.VentaDTO;
  */
 public class DetalleVentaMapper {
     
-    public static Venta toEntity(VentaDTO dto, Cliente cliente) {
+    public static DetalleVenta toEntity(DetalleVentaDTO dto, Venta venta, Producto producto) {
         if (dto == null){
              throw new IllegalArgumentException("El dto no puede estar vacio");
         }
         
-        return new Venta(
+        return new DetalleVenta(
             dto.getId(),
-            cliente,
-            dto.getFecha(),
-            dto.getEstado() != null ? EstadoVentaEnum.fromString(dto.getEstado()) : null
+            venta, 
+            producto, 
+            dto.getCantidad(),
+            dto.getPrecioUnitario()
         );
     }
 
-    public static VentaDTO toDTO(Venta entity) {
-        if (entity == null) {
-             throw new IllegalArgumentException("La venta no puede estar vacia");
+    public static DetalleVentaDTO toDTO(DetalleVenta entity) {
+        if (entity == null){
+             throw new IllegalArgumentException("El detalle de venta no puede estar vacio");
         }
         
-        return new VentaDTO(
+        return new DetalleVentaDTO(
             entity.getId(),
-            entity.getCliente() != null ? entity.getCliente().getId() : null, 
-            entity.getFecha(),
-            entity.getEstado() != null ? entity.getEstado().name() : null
+            entity.getVenta() != null ? entity.getVenta().getId() : null,     
+            entity.getProducto() != null ?  entity.getProducto().getIdProducto() : null,
+            entity.getCantidad(),
+            entity.getPrecioUnitario()
         );
     }
 }
