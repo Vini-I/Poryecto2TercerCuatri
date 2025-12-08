@@ -3,6 +3,7 @@ package controladores;
 import java.util.ArrayList;
 import java.util.List;
 
+import Controladores.BaseControlador;
 import modelo.Proveedor;
 import modelo.daos.IProveedorDAO;
 import modelo.daos.IProductoDAO;
@@ -10,12 +11,15 @@ import modelo.dtos.ProveedorDTO;
 import modelo.mappers.ProveedorMapper;
 import modelo.Producto;
 
-public class ProveedorController {
+import javax.swing.*;
+
+public class ProveedorController extends BaseControlador {
 
     private final IProveedorDAO proveedorDao;
     private final IProductoDAO productoDao;
 
-    public ProveedorController(IProveedorDAO proveedorDao, IProductoDAO productoDao) {
+    public ProveedorController(JDialog vista, IProveedorDAO proveedorDao, IProductoDAO productoDao) {
+        super(vista);
         this.proveedorDao = proveedorDao;
         this.productoDao = productoDao;
     }
