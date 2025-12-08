@@ -39,6 +39,7 @@ public class PnlProductos extends javax.swing.JPanel {
         btnNew.setVisible(session.tienePermiso("CREAR_PRODUCTO"));
         btnEdit.setVisible(session.tienePermiso("EDITAR_PRODUCTO"));
         btnDelete.setVisible(session.tienePermiso("ELIMINAR_PRODUCTO"));
+        btnInventory.setVisible(session.tienePermiso("VER_INVENTARIO"));
     }
     
     private void inicializar() {
@@ -149,6 +150,7 @@ public class PnlProductos extends javax.swing.JPanel {
         btnDelete = new javax.swing.JButton();
         btnNew = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
+        btnInventory = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1200, 800));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -175,7 +177,7 @@ public class PnlProductos extends javax.swing.JPanel {
                 txtFilterKeyReleased(evt);
             }
         });
-        jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 670, 40));
+        jPanel4.add(txtFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 580, 40));
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
         jTable1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -205,7 +207,7 @@ public class PnlProductos extends javax.swing.JPanel {
                 btnDeleteActionPerformed(evt);
             }
         });
-        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
+        jPanel4.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
 
         btnNew.setBackground(new java.awt.Color(0, 166, 62));
         btnNew.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -217,7 +219,7 @@ public class PnlProductos extends javax.swing.JPanel {
                 btnNewActionPerformed(evt);
             }
         });
-        jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
+        jPanel4.add(btnNew, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 50, 80, 40));
 
         btnEdit.setBackground(new java.awt.Color(21, 93, 252));
         btnEdit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -229,7 +231,19 @@ public class PnlProductos extends javax.swing.JPanel {
                 btnEditActionPerformed(evt);
             }
         });
-        jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 50, 80, 40));
+        jPanel4.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 80, 40));
+
+        btnInventory.setBackground(new java.awt.Color(102, 102, 102));
+        btnInventory.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnInventory.setForeground(new java.awt.Color(255, 255, 255));
+        btnInventory.setText("Inventario");
+        btnInventory.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 130, 54)));
+        btnInventory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInventoryActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnInventory, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 50, 80, 40));
 
         jPanel5.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 780));
 
@@ -328,10 +342,53 @@ public class PnlProductos extends javax.swing.JPanel {
         cargarDatos();
     }//GEN-LAST:event_btnNewActionPerformed
 
+    private void btnInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventoryActionPerformed
+        ProductoService service = new ProductoService();
+
+        var agotados = service.listarAgotados();
+
+        StringBuilder agotadosTexto = new StringBuilder();
+        if (agotados.isEmpty()) {
+            agotadosTexto.append("No hay productos agotados.\n");
+        } else {
+            for (var p : agotados) {
+                agotadosTexto.append("- ").append(p.getNombre())
+                              .append(" (Código: ").append(p.getCodigo()).append(")\n");
+            }
+        }
+
+        var stockBajo = service.listarStockBajo(10);
+
+        StringBuilder stockBajoTexto = new StringBuilder();
+        if (stockBajo.isEmpty()) {
+            stockBajoTexto.append("No hay productos con stock bajo.\n");
+        } else {
+            for (var p : stockBajo) {
+                stockBajoTexto.append("- ").append(p.getNombre())
+                               .append(" (Stock: ").append(p.getStock()).append(")\n");
+            }
+        }
+
+        double valorInventario = service.valorTotalInventario();
+
+        String mensaje = 
+            "Productos agotados:\n" +
+            agotadosTexto.toString() +
+            "\n" +
+            "Productos por agotarse (Menos de 10 unidades en stock):\n" +
+            stockBajoTexto.toString() +
+            "\n" +
+            "Valor total del inventario:\n" +
+            "₡ " + String.format("%,.2f", valorInventario);
+
+        JOptionPane.showMessageDialog(this, mensaje, "Reporte de Inventario", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnInventoryActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnInventory;
     private javax.swing.JButton btnNew;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
